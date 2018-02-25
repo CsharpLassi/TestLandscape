@@ -11,10 +11,8 @@ using Color = engenious.Color;
 
 namespace TestLandscape
 {
-    public class Landscape
-    {
-        private readonly GraphicsDevice device;
-        
+    public class Landscape : GameObject<Landscape>
+    {   
         private bool isDirty = true;
 
         private VertexBuffer vb;
@@ -26,10 +24,7 @@ namespace TestLandscape
         public uint Width { get; private set; }
         public ColorByte[] HeightMap { get; private set; }
         
-        public Landscape(GraphicsDevice device)
-        {
-            this.device = device;
-        }
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private uint GetIndex(uint x, uint y)
         {
@@ -37,16 +32,17 @@ namespace TestLandscape
             y -= 1;
             return x * (Height -2) + y;
         }
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private float GetHeight(uint x, uint y)
         {
             return (HeightMap[y * Width + x].R / 255.0f - 0.5f);
         }
-        public unsafe void Load(ContentManager manager)
+        
+        public override unsafe void Load(ContentManager manager,GraphicsDevice device)
         {
             if (!isDirty)
                 return;
-            
             
             terrainEffect = manager.Load<TerrainEffect>("TerrainEffect");
             
@@ -61,12 +57,6 @@ namespace TestLandscape
 
             var vertex = new VertexPositionNormalColor[(Width-2)*(Height-2)];
             var indexes = new uint[(Width-3)*(Height-3)*6];
-            
-            
-            
-
-            
-            
             
             //for (uint x = 1; x < Width-1; x++)
             Parallel.For(1, Width - 1, (xs) =>
@@ -125,8 +115,27 @@ namespace TestLandscape
             
             isDirty = false;
         }
+
+        protected override void OnDraw(RenderPass pass, GameTime time, GraphicsDevice device, Camera camera, SunLight sun,
+            Matrix world, RenderTarget2D shadowMap, Matrix shadowProjView)
+        {
+            if (pass == RenderPass.Shadow)
+            {
+                DrawShadow(device,world,camera.View,camera.Projection);
+            }
+            else if (pass == RenderPass.Normal)
+            {
+                DrawNormal(device,world,camera.View,camera.Projection,
+                    shadowProjView,shadowMap,sun.AmbientColor,sun.DiffuseColor,sun.DiffuseDirection );
+            }
+            
+            
+        }
         
-        public void Draw(Matrix world, Matrix view, Matrix proj, Matrix shadowViewProj, RenderTarget2D shadowMap
+        
+        private void DrawNormal(GraphicsDevice device,Matrix world, Matrix view, Matrix proj
+            , Matrix shadowViewProj
+            , RenderTarget2D shadowMap
             ,Color ambientColor,Color diffuseColor,Vector3 diffuseDirection)
         {
             device.RasterizerState = RasterizerState.CullClockwise;
@@ -146,7 +155,8 @@ namespace TestLandscape
             device.DrawIndexedPrimitives(PrimitiveType.Triangles,0,0,vb.VertexCount,0,ib.IndexCount/3);
         }
 
-        public void DrawShadow(Matrix world, Matrix view, Matrix proj)
+        
+        private void DrawShadow(GraphicsDevice device ,Matrix world, Matrix view, Matrix proj)
         {
             device.RasterizerState = RasterizerState.CullCounterClockwise;
             device.VertexBuffer = vb;
@@ -160,8 +170,7 @@ namespace TestLandscape
             device.DrawIndexedPrimitives(PrimitiveType.Triangles,0,0,vb.VertexCount,0,ib.IndexCount/3);
         }
         
-        public void Update()
-        {
-        }
+
+
     }
 }
