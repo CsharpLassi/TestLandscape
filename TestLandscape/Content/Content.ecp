@@ -2,7 +2,7 @@
 <Content>
   <Name>Content</Name>
   <Configuration>Debug</Configuration>
-  <OutputDir>bin/{Configuration}</OutputDir>
+  <OutputDir>/home/lassi/Dokumente/develop/cs/TestLandscape/TestLandscape/Content/bin/Debug</OutputDir>
   <Contents>
     <ContentFolder>
       <Name>trees</Name>

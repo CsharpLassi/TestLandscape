@@ -70,6 +70,12 @@ namespace TestLandscape
                 child.Draw(RenderPass.Normal, time, device, Camera, SunLight , Matrix.Identity,shadowMap,shadowProjView);
             }
             
+            //Transparent
+            foreach (var child in Children)
+            {
+                child.Draw(RenderPass.Transparent, time, device, Camera, SunLight , Matrix.Identity,shadowMap,shadowProjView);
+            }
+            
         }
     }
 }

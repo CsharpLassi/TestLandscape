@@ -14,7 +14,22 @@
             </Attributes>
         </Pass>
     </Technique>
-     <Technique name="Shadow">
+    
+    <Technique name="Transparent">
+            <Pass name="Pass1">
+                <Shader type="PixelShader" filename="modelEffect/transparent.ps">
+    
+                </Shader>
+                <Shader type="VertexShader" filename="modelEffect/transparent.vs">
+                
+                </Shader>
+                <Attributes>
+                    <attribute name="position">Position</attribute>
+                </Attributes>
+            </Pass>
+        </Technique>
+    
+    <Technique name="Shadow">
         <Pass name="Pass1">
             <Shader type="PixelShader" filename="shadowEffect/shadow.ps">
     

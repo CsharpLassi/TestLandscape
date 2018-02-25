@@ -5,5 +5,6 @@
         CameraUpdate,
         Shadow,
         Normal,
+        Transparent
     }
 }

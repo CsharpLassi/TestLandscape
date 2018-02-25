@@ -13,6 +13,8 @@ namespace TestLandscape
     public class TestGame : Game
     { 
         private BasicScene scene;
+
+        private ModelEffect modelEffect;
         
         public TestGame()
         {
@@ -22,6 +24,8 @@ namespace TestLandscape
         public override void LoadContent()
         {
             base.LoadContent();
+            
+            
             
             scene = new BasicScene(this);
             scene.Load(Content,GraphicsDevice);

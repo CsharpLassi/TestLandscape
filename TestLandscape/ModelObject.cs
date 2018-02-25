@@ -11,17 +11,21 @@ namespace TestLandscape
         private static bool isStaticLoaded;
 
         private static ModelEffect effect;
+
+        public bool IsTransparent { get; set; }
+        public bool HaveShadow { get; set; } = true;
+        
         public override void Load(ContentManager manager, GraphicsDevice device)
         {
             base.Load(manager, device);
-            LoadStatic(manager);
+            LoadStatic(manager,device);
         }
 
-        private static void LoadStatic(ContentManager manager)
+        private static void LoadStatic(ContentManager manager,GraphicsDevice device)
         {
             if (isStaticLoaded)
                 return;
-
+  
             effect = manager.Load<ModelEffect>("ModelEffect");
 
             isStaticLoaded = true;
@@ -29,7 +33,7 @@ namespace TestLandscape
 
         protected void DrawModel(RenderPass pass,Model model,GraphicsDevice device,Matrix world,Camera camera, SunLight sun)
         {
-            if (pass == RenderPass.Shadow)
+            if (pass == RenderPass.Shadow && HaveShadow)
             {
                 device.RasterizerState = RasterizerState.CullCounterClockwise;
                 effect.Shadow.Pass1.Apply();
@@ -38,7 +42,7 @@ namespace TestLandscape
                 effect.Shadow.Pass1.World = world;
                 model.Draw();
             }
-            else if (pass == RenderPass.Normal)
+            else if (pass == RenderPass.Normal && !IsTransparent)
             {
                 device.RasterizerState = RasterizerState.CullClockwise;
             
@@ -51,6 +55,17 @@ namespace TestLandscape
                 effect.Main.Pass1.View = camera.View;
                 effect.Main.Pass1.World = world;
             
+                model.Draw();
+            }
+            else if(pass == RenderPass.Transparent && IsTransparent)
+            {
+                device.RasterizerState = RasterizerState.CullClockwise;
+                effect.Transparent.Pass1.Apply();
+                
+                effect.Transparent.Pass1.Proj = camera.Projection;
+                effect.Transparent.Pass1.View = camera.View;
+                effect.Transparent.Pass1.World = world;
+                
                 model.Draw();
             }
             

@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TestLandscape</RootNamespace>
     <AssemblyName>TestLandscape</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -35,9 +35,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="engenious, Version=0.1.25.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\engenious.0.1.25\lib\net40\engenious.dll</HintPath>
-    </Reference>
     <Reference Include="engenious.CreatedContent.Content, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>Content\engenious.CreatedContent.Content.dll</HintPath>
     </Reference>
@@ -91,6 +88,8 @@
     <Content Include="Content\ModelEffect.glsl" />
     <Content Include="Content\modelEffect\main.ps" />
     <Content Include="Content\modelEffect\main.vs" />
+    <Content Include="Content\modelEffect\transparent.ps" />
+    <Content Include="Content\modelEffect\transparent.vs" />
     <Content Include="Content\shadowEffect\shadow.ps" />
     <Content Include="Content\shadowEffect\shadow.vs" />
     <Content Include="Content\TerrainEffect.glsl" />
@@ -99,6 +98,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\engenious\engenious\engenious.csproj">
+      <Project>{e1ff7bdb-d631-4d4d-b5a1-988778ad15b6}</Project>
+      <Name>engenious</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\engenious.0.1.25\build\engenious.targets" />
