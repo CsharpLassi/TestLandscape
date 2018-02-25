@@ -126,9 +126,10 @@ namespace TestLandscape
             isDirty = false;
         }
         
-        public void Draw(Matrix world, Matrix view, Matrix proj,Color ambientColor,Color diffuseColor,Vector3 diffuseDirection)
+        public void Draw(Matrix world, Matrix view, Matrix proj, Matrix shadowViewProj, RenderTarget2D shadowMap
+            ,Color ambientColor,Color diffuseColor,Vector3 diffuseDirection)
         {
-            device.RasterizerState.CullMode = CullMode.Clockwise;
+            device.RasterizerState = RasterizerState.CullClockwise;
             device.VertexBuffer = vb;
             device.IndexBuffer = ib;
 
@@ -136,19 +137,18 @@ namespace TestLandscape
             terrainEffect.Main.Pass1.World = world;
             terrainEffect.Main.Pass1.View = view;
             terrainEffect.Main.Pass1.Proj = proj;
+            terrainEffect.Main.Pass1.shadowViewProj = shadowViewProj;
+            terrainEffect.Main.Pass1.ShadowMap = shadowMap;
+            
             terrainEffect.Main.Pass1.AmbientColor = ambientColor;
             terrainEffect.Main.Pass1.DiffuseColor = diffuseColor;
             terrainEffect.Main.Pass1.DiffuseDirection = diffuseDirection;
             device.DrawIndexedPrimitives(PrimitiveType.Triangles,0,0,vb.VertexCount,0,ib.IndexCount/3);
         }
 
-        public void Update()
-        {
-        }
-
         public void DrawShadow(Matrix world, Matrix view, Matrix proj)
         {
-            device.RasterizerState.CullMode = CullMode.CounterClockwise;
+            device.RasterizerState = RasterizerState.CullCounterClockwise;
             device.VertexBuffer = vb;
             device.IndexBuffer = ib;
             
@@ -158,6 +158,10 @@ namespace TestLandscape
             terrainEffect.Shadow.Pass1.World = world;
             
             device.DrawIndexedPrimitives(PrimitiveType.Triangles,0,0,vb.VertexCount,0,ib.IndexCount/3);
+        }
+        
+        public void Update()
+        {
         }
     }
 }

@@ -52,7 +52,7 @@ namespace TestLandscape
             modelEffect = Content.Load<ModelEffect>("ModelEffect");
             tree1 = Content.Load<Model>("trees/tree1");
             
-            shadowMap = new RenderTarget2D(GraphicsDevice,1024,1024,PixelInternalFormat.DepthComponent32);
+            shadowMap = new RenderTarget2D(GraphicsDevice,1024*4,1024*4,PixelInternalFormat.DepthComponent32);
             shadowMap.SamplerState = SamplerState.LinearClamp;
             
             batch = new SpriteBatch(GraphicsDevice);
@@ -96,7 +96,12 @@ namespace TestLandscape
 
             if (state.IsKeyDown(Keys.Space))
             {
-                position += new Vector3(0,0,tilt)*0.1f * fac;
+                position += new Vector3(0,0,1)*0.1f;
+            }
+            
+            if (state.IsKeyDown(Keys.ShiftLeft))
+            {
+                position += new Vector3(0,0,-1)*0.1f;
             }
             
             if (mouse.IsButtonDown(MouseButton.Left))
@@ -134,32 +139,39 @@ namespace TestLandscape
         public override void Draw(GameTime gameTime)
         {
                   
-            //DrawShadow();
+            DrawShadow();
             DrawNormal();
         }
 
+        private Matrix shadowViewProj = Matrix.Identity;
+        Matrix bias = new Matrix(0.5f,0.0f,0.0f,0.5f,
+            0.0f,0.5f,0.0f,0.5f,
+            0.0f,0.0f,0.5f,0.5f,
+            0.0f,0.0f,0.0f,1.0f);
+        
         public void DrawShadow()
         {
             GraphicsDevice.SetRenderTarget(shadowMap);
             GraphicsDevice.Clear(Color.White);
             
-            var dir = new Vector3(0, -1, -1);
+            var dir = new Vector3(0, 1, -1);
             dir.Normalize();
             
-            var centerposition = new Vector3(landScape.Width/2,landScape.Height/2,0);
             
-            var view = Matrix.CreateLookAt(centerposition - dir, centerposition,Vector3.UnitY);
+            var view = Matrix.CreateLookAt(position - dir, position,Vector3.UnitY);
             
-            var proj = Matrix.CreateOrthographicOffCenter(-centerposition.X,centerposition.X,centerposition.Y,-centerposition.Y,-4096,4096);
+            var proj = Matrix.CreateOrthographicOffCenter(-40,40,40,-40,-500,500);
+
+            shadowViewProj = bias * proj * view;
             
-            landScape.DrawShadow(Matrix.Identity, view,proj);
+            landScape.DrawShadow(Matrix.CreateScaling(5,5,100), view,proj);
             
             
             GraphicsDevice.RasterizerState = RasterizerState.CullCounterClockwise;
             modelEffect.Shadow.Pass1.Apply();
             modelEffect.Shadow.Pass1.Proj = proj;
             modelEffect.Shadow.Pass1.View = view;
-            modelEffect.Shadow.Pass1.World = Matrix.CreateTranslation(10, 10, 2.5f);
+            modelEffect.Shadow.Pass1.World = Matrix.CreateTranslation(30, 30, -12);
             tree1.Draw();
             
         }
@@ -168,14 +180,13 @@ namespace TestLandscape
         {
             GraphicsDevice.SetRenderTarget(null);
             GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-            //GraphicsDevice.RasterizerState = null;
             
             GraphicsDevice.Clear(Color.CornflowerBlue);
             
             Color ambientColor = Color.LightGray;
             Color dirColor = Color.White;
             
-            var dir = new Vector3(0, -1, -1);
+            var dir = new Vector3(0, 1, -1);
             dir.Normalize();
             
             var view = Matrix.CreateLookAt(
@@ -188,17 +199,21 @@ namespace TestLandscape
             
             var proj = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4,GraphicsDevice.Viewport.AspectRatio, 0.1f, 500.0f);
             
-            landScape.Draw(Matrix.CreateScaling(5,5,100), view,proj,ambientColor,dirColor,dir);
+            landScape.Draw(Matrix.CreateScaling(5,5,100), view,proj,shadowViewProj,shadowMap
+                ,ambientColor,dirColor,dir);
 
 
-            //GraphicsDevice.RasterizerState = RasterizerState.CullNone;
+            GraphicsDevice.RasterizerState = RasterizerState.CullClockwise;
+            
             modelEffect.Main.Pass1.Apply();
             modelEffect.Main.Pass1.AmbientColor = ambientColor;
             modelEffect.Main.Pass1.DiffuseColor = dirColor;
             modelEffect.Main.Pass1.DiffuseDirection = dir;
             modelEffect.Main.Pass1.Proj = proj;
             modelEffect.Main.Pass1.View = view;
-            modelEffect.Main.Pass1.World = Matrix.CreateTranslation(10, 10, 2.5f);
+            modelEffect.Main.Pass1.ShadowMap = shadowMap;
+            modelEffect.Main.Pass1.shadowViewProj = shadowViewProj;
+            modelEffect.Main.Pass1.World = Matrix.CreateTranslation(30, 30, -12f);
             tree1.Draw();      
         }
     }
