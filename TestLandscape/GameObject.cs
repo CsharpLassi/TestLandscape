@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using engenious;
 using engenious.Content;
 using engenious.Graphics;
@@ -11,7 +12,7 @@ namespace TestLandscape
         public GameObjectCollection Children { get; set; } = new GameObjectCollection();
         public GameObjectComponentCollection Components { get; set; } = new GameObjectComponentCollection();
         
-        public virtual void Load(ContentManager manager,GraphicsDevice device)
+        public virtual void Load(ContentManager manager,GraphicsDevice device,Scene scene)
         {
         }
         
@@ -95,7 +96,9 @@ namespace TestLandscape
         public GameObject<GT> Create<T>(Scene scene,Action<T> fill)
             where T: GameObjectComponent,new()
         {
-            fill?.Invoke(Components.Create<T>(this,scene));
+            var component = Components.Create<T>(this, scene);
+            
+            fill?.Invoke(component);
             return this;
         }
         

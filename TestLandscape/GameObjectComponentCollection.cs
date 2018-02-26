@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TestLandscape.Scenes;
 
@@ -6,13 +7,22 @@ namespace TestLandscape
 {
     public class GameObjectComponentCollection : List<GameObjectComponent>
     {
-        public T Create<T>(GameObject gameObject,Scene scene)
+        public T Create<T>(GameObject gameObject,Scene scene,Action<T> fill)
             where T: GameObjectComponent,new()
         {
             var component = new T();
             component.Load(gameObject,scene);
-            this.Add(component);
+            Add(component);
+            
+            fill?.Invoke(component);
+            
             return component;
+        }
+        
+        public T Create<T>(GameObject gameObject,Scene scene)
+            where T: GameObjectComponent,new()
+        {
+            return Create<T>(gameObject, scene, null);
         }
 
         public T Get<T>()

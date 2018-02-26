@@ -10,7 +10,7 @@ namespace TestLandscape
         {
             public SunLight SunLight { get; internal set; }
 
-            public override void Load(ContentManager manager, GraphicsDevice device)
+            public override void Load(ContentManager manager, GraphicsDevice device, Scene scene)
             {
                 IsOrtho = true;
             }
@@ -34,9 +34,9 @@ namespace TestLandscape
 
         public SunShadowCamera ShadowCamera { get; private set; }
         
-        public override void Load(ContentManager manager, GraphicsDevice device)
+        public override void Load(ContentManager manager, GraphicsDevice device, Scene scene)
         {
-            ShadowCamera = Children.Create<SunShadowCamera>(manager, device);
+            ShadowCamera = Children.Create<SunShadowCamera>(manager, device, scene);
             ShadowCamera.SunLight = this;
             
             AmbientColor = Color.LightGray;

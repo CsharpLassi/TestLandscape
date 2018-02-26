@@ -39,7 +39,7 @@ namespace TestLandscape
             return (HeightMap[y * Width + x].R / 255.0f - 0.5f);
         }
         
-        public override unsafe void Load(ContentManager manager,GraphicsDevice device)
+        public override unsafe void Load(ContentManager manager, GraphicsDevice device, Scene scene)
         {
             if (!isDirty)
                 return;

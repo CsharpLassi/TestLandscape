@@ -14,7 +14,7 @@ namespace TestLandscape
     { 
         private BasicScene scene;
 
-        private ModelEffect modelEffect;
+        //private ModelEffect modelEffect;
         
         public TestGame()
         {

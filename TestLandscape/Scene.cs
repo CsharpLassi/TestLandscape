@@ -26,8 +26,8 @@ namespace TestLandscape
             shadowMap = new RenderTarget2D(device,1024*4,1024*4,PixelInternalFormat.DepthComponent32);
             shadowMap.SamplerState = SamplerState.LinearClamp;
             
-            Camera = Children.Create<Camera>(manager,device);
-            SunLight = Children.Create<SunLight>(manager, device);
+            Camera = Children.Create<Camera>(manager,device, this);
+            SunLight = Children.Create<SunLight>(manager, device, this);
         }
 
         public virtual void Update(GameTime time)

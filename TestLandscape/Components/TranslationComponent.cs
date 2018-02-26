@@ -4,9 +4,9 @@ namespace TestLandscape.Components
 {
     public class TranslationComponent : GameObjectComponent
     {
-        public Vector3 Position { get; set; }
-        public Vector3 Rotation { get; set; }
-        public Vector3 Scaling { get; set; } = Vector3.One;
+        public Vector3 Position;
+        public Vector3 Rotation;
+        public Vector3 Scaling = Vector3.One;
 
         public TranslationComponent()
         {

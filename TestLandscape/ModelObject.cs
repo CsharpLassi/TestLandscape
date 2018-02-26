@@ -15,9 +15,9 @@ namespace TestLandscape
         public bool IsTransparent { get; set; }
         public bool HaveShadow { get; set; } = true;
         
-        public override void Load(ContentManager manager, GraphicsDevice device)
+        public override void Load(ContentManager manager, GraphicsDevice device, Scene scene)
         {
-            base.Load(manager, device);
+            base.Load(manager, device, scene);
             LoadStatic(manager,device);
         }
 
