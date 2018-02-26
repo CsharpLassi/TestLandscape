@@ -41,7 +41,7 @@ namespace TestLandscape.Components
             Scene.Camera.Up = -cameraUpVector;
         }
 
-        public override void OnCopy(HeadComponent component)
+        protected override void OnCopy(HeadComponent component)
         {
             component.Position = Position;
             component.Angle = Angle;

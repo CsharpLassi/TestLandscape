@@ -36,7 +36,6 @@ namespace TestLandscape.Scripts
             }
 
             Rotation = mouseState.Wheel/10.0f;
-            Console.WriteLine(Rotation);
             
             TranslationComponent boxPosition;
             HeadComponent playerHead;
@@ -53,7 +52,7 @@ namespace TestLandscape.Scripts
             boxPosition.Rotation = new Vector3(0,0,Rotation);
         }
 
-        public override void OnCopy(PlaceItemScript component)
+        protected override void OnCopy(PlaceItemScript component)
         {
             component.Distance = Distance;
         }

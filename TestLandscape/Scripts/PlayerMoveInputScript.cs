@@ -52,7 +52,7 @@ namespace TestLandscape.Scripts
             }
         }
 
-        public override void OnCopy(PlayerMoveInputScript component)
+        protected override void OnCopy(PlayerMoveInputScript component)
         {
             
         }

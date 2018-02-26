@@ -8,7 +8,7 @@ namespace TestLandscape.Components
         public Vector3 Scaling = Vector3.One;
         public Matrix Matrix => Matrix.CreateScaling(Scaling);
         
-        public override void OnCopy(ScalingComponent component)
+        protected override void OnCopy(ScalingComponent component)
         {
             component.Scaling = Scaling;
         }

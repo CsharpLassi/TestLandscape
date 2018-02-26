@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Dynamic;
+using System.Threading;
 using engenious;
 using engenious.Content;
 using engenious.Graphics;
@@ -8,8 +9,10 @@ using TestLandscape.Components;
 
 namespace TestLandscape
 {
-    public class GameObject
+    public class GameObject : IGameId
     {
+        private static int globalId;
+        
         private GameObject parent;
         
         public GameObjectCollection Children { get; set; } = new GameObjectCollection();
@@ -17,6 +20,10 @@ namespace TestLandscape
 
         public bool IsEnabled { get; set; } = true;
 
+
+        
+        public int Id { get; } = Interlocked.Increment(ref globalId);
+        
         public GameObject Parent
         {
             get { return parent; }
@@ -84,7 +91,7 @@ namespace TestLandscape
             
             if (firstDraw)
             {
-                translationComponent = Components.Get<TranslationComponent>();
+                Components.TryGet(out translationComponent);
                 firstDraw = false;
             }
 
@@ -136,9 +143,9 @@ namespace TestLandscape
         }
         
         public T CreateComponent<T>(Action<T> fill = null) 
-            where T : GameObjectComponent,new()
+            where T : GameObjectComponent<T>,new()
         {
-            var newObject = Components.Create<T>(this, Scene, fill);
+            var newObject = Components.CreateOrGet<T>(this, Scene, fill);
             return newObject;
         }
 

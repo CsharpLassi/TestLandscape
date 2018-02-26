@@ -1,13 +1,29 @@
 ﻿using System;
+using System.ComponentModel.Design;
+using System.Threading;
 using engenious;
 
 namespace TestLandscape
 {
-    public abstract class GameObjectComponent
+    public static class GameObjectComponentManager
+    {
+        private static int globalId = 0;
+        
+        public static int GetNextId()
+        {
+            return Interlocked.Increment(ref globalId);
+        }
+    }
+    
+    public abstract class GameObjectComponent<T> : IGameObjectComponent
+        where T : GameObjectComponent<T>
     {
         protected GameObject GameObject { get; private set; }
         protected Scene Scene { get; private set; }
 
+        public static readonly int ComponentId = GameObjectComponentManager.GetNextId();
+        public int Id => ComponentId;
+        
         public bool IsEnabled { get; set; } = true;
 
         public void Load(GameObject gameObject, Scene scene)
@@ -27,28 +43,22 @@ namespace TestLandscape
 
         }
 
-        public GameObjectComponent Copy(GameObject gameObject, Scene scene)
+        public IGameObjectComponent Copy(GameObject gameObject, Scene scene)
         {
-            var newComponent = (GameObjectComponent)Activator.CreateInstance(this.GetType());
-            
+            var newComponent = (T)Activator.CreateInstance(this.GetType());
             newComponent.GameObject = gameObject;
             newComponent.Scene = scene;
+            
             OnCopy(newComponent);
 
             return newComponent;
         }
 
-        protected abstract void OnCopy(GameObjectComponent component);
-    }
+        protected abstract void OnCopy(T component);
 
-    public abstract class GameObjectComponent<T> : GameObjectComponent
-        where T : GameObjectComponent<T>
-    {
-        protected override void OnCopy(GameObjectComponent component)
+        public sealed override int GetHashCode()
         {
-            OnCopy((T)component);
+            return Id;
         }
-
-        public abstract void OnCopy(T component);
     }
 }

@@ -36,7 +36,7 @@ namespace TestLandscape.Scripts
             
         }
 
-        public override void OnCopy(PlayerMouseInputScript component)
+        protected override void OnCopy(PlayerMouseInputScript component)
         {
         }
     }

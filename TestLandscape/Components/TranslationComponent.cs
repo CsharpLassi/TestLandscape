@@ -7,11 +7,6 @@ namespace TestLandscape.Components
         public Vector3 Position;
         public Vector3 Rotation;
         public Vector3 Scaling = Vector3.One;
-
-        public TranslationComponent()
-        {
-            
-        }
         
         public Matrix Matrix => Matrix.CreateTranslation(Position)
                                 * Matrix.CreateScaling(Scaling) 
@@ -19,7 +14,7 @@ namespace TestLandscape.Components
                                 * Matrix.CreateRotationY(Rotation.Y)  
                                 * Matrix.CreateRotationZ(Rotation.Z);
 
-        public override void OnCopy(TranslationComponent component)
+        protected override void OnCopy(TranslationComponent component)
         {
             component.Position = component.Position;
             component.Rotation = component.Rotation;

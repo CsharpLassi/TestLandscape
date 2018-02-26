@@ -63,10 +63,13 @@
     <Compile Include="Components\HeadComponent.cs" />
     <Compile Include="Components\ScalingComponent.cs" />
     <Compile Include="Components\TranslationComponent.cs" />
+    <Compile Include="GameList.cs" />
     <Compile Include="GameObjectComponent.cs" />
     <Compile Include="GameObject.cs" />
     <Compile Include="GameObjectCollection.cs" />
     <Compile Include="GameObjectComponentCollection.cs" />
+    <Compile Include="IGameId.cs" />
+    <Compile Include="IGameObjectComponent.cs" />
     <Compile Include="Landscape.cs" />
     <Compile Include="ModelObject.cs" />
     <Compile Include="Models\Player.cs" />

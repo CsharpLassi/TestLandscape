@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using engenious.Content;
 using engenious.Graphics;
 
 namespace TestLandscape
 {
-    public class GameObjectCollection : List<GameObject>
+    public class GameObjectCollection : GameList<GameObject>
     {
+        
         public T Create<T>(ContentManager manager,GraphicsDevice device,Scene scene,GameObject parent,Action<T> fill)
             where T : GameObject,new()
         {
@@ -20,7 +23,7 @@ namespace TestLandscape
             
             return gameObject;
         }
-
+        
         public T Create<T>(ContentManager manager, GraphicsDevice device, Scene scene, GameObject parent)
             where T : GameObject, new()
         {
