@@ -13,11 +13,11 @@ namespace TestLandscape.Components
             
         }
         
-        public Matrix Matrix => Matrix.CreateScaling(Scaling) 
+        public Matrix Matrix => Matrix.CreateTranslation(Position)
+                                * Matrix.CreateScaling(Scaling) 
                                 * Matrix.CreateRotationX(Rotation.X)  
                                 * Matrix.CreateRotationY(Rotation.Y)  
-                                * Matrix.CreateRotationZ(Rotation.Z)  
-                                * Matrix.CreateTranslation(Position);
+                                * Matrix.CreateRotationZ(Rotation.Z);
 
         public override void OnCopy(TranslationComponent component)
         {

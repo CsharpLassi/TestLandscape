@@ -9,7 +9,9 @@ namespace TestLandscape.Scripts
     {
         public GameObject PlaceBox;
         public int Distance = 5;
-     
+
+        public float Rotation = 0;
+        
         public override void Update(GameTime gameTime)
         {
             var mouseState = Mouse.GetState();
@@ -22,6 +24,7 @@ namespace TestLandscape.Scripts
                     {
                         Matrix translationMatrix = PlaceBox.GetGlobalWorldMatrix();
                         translation.Position = translationMatrix.Translation;
+                        translation.Rotation = new Vector3(0,0,Rotation);
                         copy.Parent = null;
                     
                         Scene.Children.Add(copy);
@@ -31,6 +34,9 @@ namespace TestLandscape.Scripts
                 PlaceBox.IsEnabled = false;
                 IsEnabled = false;
             }
+
+            Rotation = mouseState.Wheel/10.0f;
+            Console.WriteLine(Rotation);
             
             TranslationComponent boxPosition;
             HeadComponent playerHead;
@@ -44,6 +50,7 @@ namespace TestLandscape.Scripts
             
             boxPosition.Position = new Vector3((float)Math.Cos(playerHead.Angle)*Distance
                 ,-(float)Math.Sin(playerHead.Angle)*Distance,(float)Math.Sin(playerHead.Tilt)*Distance);
+            boxPosition.Rotation = new Vector3(0,0,Rotation);
         }
 
         public override void OnCopy(PlaceItemScript component)
