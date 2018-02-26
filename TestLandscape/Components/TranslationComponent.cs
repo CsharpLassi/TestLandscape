@@ -2,7 +2,7 @@
 
 namespace TestLandscape.Components
 {
-    public class TranslationComponent : GameObjectComponent
+    public class TranslationComponent : GameObjectComponent<TranslationComponent>
     {
         public Vector3 Position;
         public Vector3 Rotation;
@@ -18,5 +18,12 @@ namespace TestLandscape.Components
                                 * Matrix.CreateRotationY(Rotation.Y)  
                                 * Matrix.CreateRotationZ(Rotation.Z)  
                                 * Matrix.CreateTranslation(Position);
+
+        public override void OnCopy(TranslationComponent component)
+        {
+            component.Position = component.Position;
+            component.Rotation = component.Rotation;
+            component.Scaling = component.Scaling;
+        }
     }
 }

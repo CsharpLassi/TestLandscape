@@ -4,7 +4,7 @@ using TestLandscape.Components;
 
 namespace TestLandscape.Scripts
 {
-    public class PlayerMouseInputScript : Script
+    public class PlayerMouseInputScript : Script<PlayerMouseInputScript>
     {
         public Vector2 mouseOldPoistion;
         
@@ -34,6 +34,10 @@ namespace TestLandscape.Scripts
                 Scene.Game.IsMouseVisible = true;
             }
             
+        }
+
+        public override void OnCopy(PlayerMouseInputScript component)
+        {
         }
     }
 }

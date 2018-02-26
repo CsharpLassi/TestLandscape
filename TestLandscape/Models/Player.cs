@@ -8,26 +8,20 @@ namespace TestLandscape.Models
 {
     public class Player : GameObject<Player>
     {
-        public override void Load(ContentManager manager, GraphicsDevice device, Scene scene)
+        public override void OnLoad()
         {
-            Create<TranslationComponent>(scene, null);
-            Create<HeadComponent>(scene,null);
+            CreateComponent<TranslationComponent>();
+            CreateComponent<HeadComponent>();
 
-            Create<PlayerMouseInputScript>(scene, null);
-            Create<PlayerMoveInputScript>(scene, null);
+            CreateComponent<PlayerMouseInputScript>();
+            CreateComponent<PlayerMoveInputScript>();
 
             
-            var placeBox = Children.Create<GameObject>(manager, device, scene);
-            placeBox.Components.Create<TranslationComponent>(placeBox, scene);
-            placeBox.Children.Create<Tree1Object>(manager, device, scene);
+            var placeBox = CreateObject<GameObject>();
+            placeBox.CreateComponent<TranslationComponent>();
+            placeBox.CreateObject<Tree1Object>();
 
-            Create<PlaceItemScript>(scene, i => i.PlayeBox = placeBox);
-        }
-
-        protected override void OnDrawChildren(RenderPass pass, GameTime time, GraphicsDevice device, Camera camera, SunLight sun, Matrix world,
-            RenderTarget2D shadowMap, Matrix shadowProjView)
-        {
-            base.OnDrawChildren(pass, time, device, camera, sun, world, shadowMap, shadowProjView);
+            CreateComponent<PlaceItemScript>(i => i.PlaceBox = placeBox);
         }
     }
 }

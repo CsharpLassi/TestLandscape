@@ -5,12 +5,12 @@ using engenious.Input;
 
 namespace TestLandscape.Components
 {
-    public class HeadComponent : GameObjectComponent
+    public class HeadComponent : GameObjectComponent<HeadComponent>
     {
         public Vector3 Position = new Vector3(0,0,1);
         
         public float Tilt;
-        public double Angle;
+        public float Angle;
          
         public override void Update(GameTime gameTime)
         {
@@ -26,8 +26,8 @@ namespace TestLandscape.Components
             var lookX = (float)Math.Cos(Angle) * distance;
             var lookY = -(float)Math.Sin(Angle) * distance;
 
-            float strafeX = (float)Math.Cos(Angle + MathHelper.PiOver2);
-            float strafeY = -(float)Math.Sin(Angle + MathHelper.PiOver2);
+            float strafeX = -(float)Math.Sin(Angle);
+            float strafeY = -(float)Math.Cos(Angle);
 
             
             var cameraUpVector = Vector3.Cross(new Vector3(strafeX, strafeY, 0), new Vector3(lookX, lookY, height));
@@ -39,6 +39,13 @@ namespace TestLandscape.Components
                 position.Z + height);
             
             Scene.Camera.Up = -cameraUpVector;
+        }
+
+        public override void OnCopy(HeadComponent component)
+        {
+            component.Position = Position;
+            component.Angle = Angle;
+            component.Tilt = Tilt;
         }
     }
 }

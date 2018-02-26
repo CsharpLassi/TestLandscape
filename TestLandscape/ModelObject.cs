@@ -2,6 +2,7 @@
 using engenious.Content;
 using engenious.Graphics;
 using engenious.UserDefined;
+using TestLandscape.Components;
 
 namespace TestLandscape
 {
@@ -14,11 +15,15 @@ namespace TestLandscape
 
         public bool IsTransparent { get; set; }
         public bool HaveShadow { get; set; } = true;
+
+        public TranslationComponent TranslationComponent { get; private set; }
         
-        public override void Load(ContentManager manager, GraphicsDevice device, Scene scene)
+        public override void OnLoad()
         {
-            base.Load(manager, device, scene);
-            LoadStatic(manager,device);
+            base.OnLoad();
+            LoadStatic(Manager,GraphicsDevice);
+
+            TranslationComponent = CreateComponent<TranslationComponent>();
         }
 
         private static void LoadStatic(ContentManager manager,GraphicsDevice device)

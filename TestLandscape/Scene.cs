@@ -32,7 +32,8 @@ namespace TestLandscape
 
         public virtual void Update(GameTime time)
         {
-            foreach (var child in Children)
+            //Todo:Change
+            foreach (var child in Children.ToArray())
             {
                 child.Update(time);
             }

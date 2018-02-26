@@ -10,10 +10,10 @@ namespace TestLandscape.Models
         private static Model logModel;
         private static Model leavesModel;
         
-        public override void Load(ContentManager manager, GraphicsDevice device, Scene scene)
+        public override void OnLoad()
         {
-            base.Load(manager, device, scene);
-            LoadStatic(manager);
+            base.OnLoad();
+            LoadStatic(Manager);
         }
 
         private static void LoadStatic(ContentManager manager)

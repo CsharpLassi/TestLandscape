@@ -5,7 +5,7 @@ using TestLandscape.Components;
 
 namespace TestLandscape.Scripts
 {
-    public class PlayerMoveInputScript : Script
+    public class PlayerMoveInputScript : Script<PlayerMoveInputScript>
     {
         public override void Update(GameTime gameTime)
         {
@@ -50,6 +50,11 @@ namespace TestLandscape.Scripts
             {
                 trans.Position += new Vector3(0,0,-1)*0.1f;
             }
+        }
+
+        public override void OnCopy(PlayerMoveInputScript component)
+        {
+            
         }
     }
 }

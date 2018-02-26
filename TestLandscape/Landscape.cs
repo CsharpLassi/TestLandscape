@@ -39,15 +39,15 @@ namespace TestLandscape
             return (HeightMap[y * Width + x].R / 255.0f - 0.5f);
         }
         
-        public override unsafe void Load(ContentManager manager, GraphicsDevice device, Scene scene)
+        public override unsafe void OnLoad()
         {
             if (!isDirty)
                 return;
             
-            terrainEffect = manager.Load<TerrainEffect>("TerrainEffect");
+            terrainEffect = Manager.Load<TerrainEffect>("TerrainEffect");
             
             var bitmap = (Bitmap)Bitmap.FromFile("Content/maps/map.png");
-            var heightTexture = Texture2D.FromBitmap(device,bitmap);
+            var heightTexture = Texture2D.FromBitmap(GraphicsDevice,bitmap);
             var heightmap = new ColorByte[heightTexture.Width * heightTexture.Height];
             heightTexture.GetData(heightmap);
             HeightMap = heightmap;
@@ -107,10 +107,10 @@ namespace TestLandscape
                     
                 }
             });       
-            vb = new VertexBuffer(device,typeof(VertexPositionNormalColor),vertex.Length);
+            vb = new VertexBuffer(GraphicsDevice,typeof(VertexPositionNormalColor),vertex.Length);
             vb.SetData(vertex);
 
-            ib = new IndexBuffer(device,DrawElementsType.UnsignedInt,indexes.Length);
+            ib = new IndexBuffer(GraphicsDevice,DrawElementsType.UnsignedInt,indexes.Length);
             ib.SetData(indexes);
             
             isDirty = false;

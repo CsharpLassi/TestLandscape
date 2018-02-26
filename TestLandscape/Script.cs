@@ -1,6 +1,7 @@
 ﻿namespace TestLandscape
 {
-    public abstract class Script : GameObjectComponent
+    public abstract class Script<T> : GameObjectComponent<T>
+        where T : Script<T>
     {
         
     }
