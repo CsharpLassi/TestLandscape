@@ -10,11 +10,12 @@ namespace TestLandscape
         {
             public SunLight SunLight { get; internal set; }
 
-            public override void OnLoad()
+            protected override void OnLoad()
             {
                 IsOrtho = true;
             }
 
+            /*
             protected override void OnDraw(RenderPass pass, GameTime time, GraphicsDevice device, Camera camera, SunLight sun, Matrix world,
                 RenderTarget2D shadowMap, Matrix shadowProjView)
             {
@@ -26,6 +27,7 @@ namespace TestLandscape
                 }
                 base.OnDraw(pass,time,device,camera,sun,world,shadowMap,shadowProjView);
             }
+            */
         }
         
         public Color AmbientColor { get; set; }
@@ -33,8 +35,8 @@ namespace TestLandscape
         public Vector3 DiffuseDirection { get; set; }
 
         public SunShadowCamera ShadowCamera { get; private set; }
-        
-        public override  void OnLoad()
+
+        protected override  void OnLoad()
         {
             ShadowCamera = CreateObject<SunShadowCamera>();
             ShadowCamera.SunLight = this;

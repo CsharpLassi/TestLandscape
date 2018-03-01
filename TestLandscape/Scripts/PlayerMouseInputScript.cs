@@ -19,7 +19,7 @@ namespace TestLandscape.Scripts
             
             if (mouse.IsButtonDown(MouseButton.Left))
             {      
-                if (!Scene.Game.IsMouseVisible)
+                if (!Scene.Simulation.Game.IsMouseVisible)
                 {
                     var position = new Vector2(mouse.X,mouse.Y) - mouseOldPoistion;
                     head.Angle -= position.X / 100;
@@ -27,11 +27,11 @@ namespace TestLandscape.Scripts
                 }
                 
                 mouseOldPoistion = new Vector2(mouse.X,mouse.Y);
-                Scene.Game.IsMouseVisible = false;
+                Scene.Simulation.Game.IsMouseVisible = false;
             }
             else
             {
-                Scene.Game.IsMouseVisible = true;
+                Scene.Simulation.Game.IsMouseVisible = true;
             }
             
         }

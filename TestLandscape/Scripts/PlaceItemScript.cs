@@ -33,6 +33,7 @@ namespace TestLandscape.Scripts
      
                 PlaceBox.IsEnabled = false;
                 IsEnabled = false;
+                return;
             }
 
             Rotation = mouseState.Wheel/10.0f;

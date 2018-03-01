@@ -2,6 +2,8 @@
 using System.ComponentModel.Design;
 using System.Threading;
 using engenious;
+using engenious.Content;
+using engenious.Graphics;
 
 namespace TestLandscape
 {
@@ -26,19 +28,20 @@ namespace TestLandscape
         
         public bool IsEnabled { get; set; } = true;
 
-        public void Load(GameObject gameObject, Scene scene)
+        protected ContentManager Manager { get; private set; }
+
+        protected GraphicsDevice GraphicsDevice { get; private set; }
+        
+        public void Load(GameObject gameObject, Scene scene,ContentManager manager, GraphicsDevice device)
         {
             GameObject = gameObject;
             Scene = scene;
+            Manager = manager;
+            GraphicsDevice = device;
             OnLoad();
         }
 
         protected virtual void OnLoad()
-        {
-
-        }
-
-        public virtual void Update(GameTime gameTime)
         {
 
         }

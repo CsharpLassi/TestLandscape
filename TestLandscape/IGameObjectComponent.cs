@@ -1,4 +1,6 @@
 ﻿using engenious;
+using engenious.Content;
+using engenious.Graphics;
 
 namespace TestLandscape
 {
@@ -7,7 +9,6 @@ namespace TestLandscape
         bool IsEnabled { get; set; }
 
         IGameObjectComponent Copy(GameObject gameObject, Scene scene);
-        void Load(GameObject gameObject, Scene scene);
-        void Update(GameTime gameTime);
+        void Load(GameObject gameObject, Scene scene, ContentManager manager, GraphicsDevice device);
     }
 }

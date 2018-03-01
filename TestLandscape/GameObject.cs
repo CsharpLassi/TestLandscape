@@ -51,79 +51,11 @@ namespace TestLandscape
             OnLoad();
         }
 
-        public virtual void OnLoad()
+        protected virtual void OnLoad()
         {
             
         }
-        
-        public void Update(GameTime time)
-        {
-            if (!IsEnabled)
-                return;
-            
-            foreach (var component in Components)
-            {
-                if (component.IsEnabled)
-                    component.Update(time);
-            }
 
-            OnUpdate();
-            
-            foreach (var child in Children)
-            {
-                child.Update(time);
-            }
-        }
-
-        protected virtual void OnUpdate()
-        {
-            
-        }
-        
-        private bool firstDraw = true;
-        protected TranslationComponent translationComponent;
-
-        public void Draw(RenderPass pass, GameTime time, GraphicsDevice device, Camera camera, SunLight sun, Matrix world,
-            RenderTarget2D shadowMap, Matrix shadowProjView)
-        {
-            if (!IsEnabled)
-                return;
-            
-            if (firstDraw)
-            {
-                Components.TryGet(out translationComponent);
-                firstDraw = false;
-            }
-
-
-            if (translationComponent != null)
-                world = world * translationComponent.Matrix;
-            
-            OnDrawChildren(pass,time,device, camera, sun, world, shadowMap, shadowProjView);
-
-            if (Components.TryGet<ScalingComponent>(out var component ))
-            {
-                world = world * component.Matrix;
-            }
-            
-            OnDraw(pass,time,device, camera, sun, world, shadowMap, shadowProjView);
-        }
-
-        protected virtual void OnDrawChildren(RenderPass pass,GameTime time,GraphicsDevice device, Camera camera, SunLight sun, Matrix world,
-            RenderTarget2D shadowMap, Matrix shadowProjView)
-        {
-            foreach (var child in Children)
-            {
-                child.Draw(pass, time, device, camera, sun, world,shadowMap,shadowProjView);
-            }
-        }
-
-
-        protected virtual void OnDraw(RenderPass pass, GameTime time, GraphicsDevice device, Camera camera, SunLight sun, Matrix world,
-            RenderTarget2D shadowMap, Matrix shadowProjView)
-        {
-            
-        }
         
         public T OfType<T>()
             where T: GameObject
@@ -145,7 +77,7 @@ namespace TestLandscape
         public T CreateComponent<T>(Action<T> fill = null) 
             where T : GameObjectComponent<T>,new()
         {
-            var newObject = Components.CreateOrGet<T>(this, Scene, fill);
+            var newObject = Components.CreateOrGet<T>(this, Scene, Manager, GraphicsDevice, fill);
             return newObject;
         }
 

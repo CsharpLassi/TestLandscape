@@ -2,12 +2,11 @@
 using engenious.Content;
 using engenious.Graphics;
 using engenious.UserDefined;
-using TestLandscape.Components;
 
-namespace TestLandscape
+namespace TestLandscape.Components.Models
 {
-    public abstract class ModelObject<T> : GameObject<T> 
-        where T : GameObject<T>, new()
+    public abstract class ModelComponent<T> : GameObjectComponent<T>, IDrawComponent
+        where T : GameObjectComponent<T>
     {
         private static bool isStaticLoaded;
 
@@ -15,18 +14,19 @@ namespace TestLandscape
 
         public bool IsTransparent { get; set; }
         public bool HaveShadow { get; set; } = true;
-
-        public TranslationComponent TranslationComponent { get; private set; }
         
-        public override void OnLoad()
+        protected override void OnCopy(T component)
         {
-            base.OnLoad();
-            LoadStatic(Manager,GraphicsDevice);
-
-            TranslationComponent = CreateComponent<TranslationComponent>();
+            
         }
 
-        private static void LoadStatic(ContentManager manager,GraphicsDevice device)
+        protected override void OnLoad()
+        {
+            GameObject.CreateComponent<TranslationComponent>();
+            LoadStatic(Manager);
+        }
+
+        private static void LoadStatic(ContentManager manager)
         {
             if (isStaticLoaded)
                 return;
@@ -35,12 +35,12 @@ namespace TestLandscape
 
             isStaticLoaded = true;
         }
-
-        protected void DrawModel(RenderPass pass,Model model,GraphicsDevice device,Matrix world,Camera camera, SunLight sun)
+        
+        protected void DrawModel(RenderPass pass,Model model,Matrix world,Camera camera, SunLight sun)
         {
             if (pass == RenderPass.Shadow && HaveShadow)
             {
-                device.RasterizerState = RasterizerState.CullCounterClockwise;
+                GraphicsDevice.RasterizerState = RasterizerState.CullCounterClockwise;
                 effect.Shadow.Pass1.Apply();
                 effect.Shadow.Pass1.Proj = camera.Projection;
                 effect.Shadow.Pass1.View = camera.View;
@@ -49,7 +49,7 @@ namespace TestLandscape
             }
             else if (pass == RenderPass.Normal && !IsTransparent)
             {
-                device.RasterizerState = RasterizerState.CullClockwise;
+                GraphicsDevice.RasterizerState = RasterizerState.CullClockwise;
             
                 effect.Main.Pass1.Apply();
                 effect.Main.Pass1.AmbientColor = sun.AmbientColor;
@@ -64,7 +64,7 @@ namespace TestLandscape
             }
             else if(pass == RenderPass.Transparent && IsTransparent)
             {
-                device.RasterizerState = RasterizerState.CullClockwise;
+                GraphicsDevice.RasterizerState = RasterizerState.CullClockwise;
                 effect.Transparent.Pass1.Apply();
                 
                 effect.Transparent.Pass1.Proj = camera.Projection;
@@ -76,5 +76,7 @@ namespace TestLandscape
             
 
         }
+        
+        public abstract void Draw(RenderPass pass, GameTime time, Camera camera, SunLight sun, Matrix world, RenderTarget2D shadowMap, Matrix shadowProjView);
     }
 }

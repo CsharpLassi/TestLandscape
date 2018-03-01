@@ -2,15 +2,15 @@
 using engenious.Content;
 using engenious.Graphics;
 
-namespace TestLandscape.Models
+namespace TestLandscape.Components.Models
 {
-    public class Tree1Object : ModelObject<Tree1Object>
+    public class Tree1ModelComponent : ModelComponent<Tree1ModelComponent>
     {
         private static bool isStaticLoaded;
         private static Model logModel;
         private static Model leavesModel;
         
-        public override void OnLoad()
+        protected override void OnLoad()
         {
             base.OnLoad();
             LoadStatic(Manager);
@@ -25,11 +25,13 @@ namespace TestLandscape.Models
             
             isStaticLoaded = true;
         }
-
-        protected override void OnDraw(RenderPass pass, GameTime time, GraphicsDevice device, Camera camera, SunLight sun, Matrix world, RenderTarget2D shadowMap, Matrix shadowProjView)
+        
+        public override void Draw(RenderPass pass, GameTime time, Camera camera, SunLight sun, Matrix world,
+            RenderTarget2D shadowMap, Matrix shadowProjView)
         {
-            DrawModel(pass, logModel, device ,world * Matrix.CreateScaling(0.1f,0.1f,0.1f),camera,sun);
-            DrawModel(pass, leavesModel, device, world,camera,sun);
+            DrawModel(pass,logModel,world,camera,sun);
         }
+
+
     }
 }

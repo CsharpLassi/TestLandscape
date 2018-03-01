@@ -8,6 +8,23 @@ namespace TestLandscape
 {
     public class Camera : GameObject<Camera>
     {
+        
+        protected class CameraDrawComponent : GameObjectComponent<CameraDrawComponent>, IDrawComponent
+        {
+            protected override void OnCopy(CameraDrawComponent component)
+            {
+                
+            }
+
+            public void Draw(RenderPass pass, GameTime time, Camera camera, SunLight sun, Matrix world, RenderTarget2D shadowMap, Matrix shadowProjView)
+            {
+                if (pass == RenderPass.CameraUpdate && GameObject is Camera objectCamera)
+                {
+                    objectCamera.UpdateMatrix(GraphicsDevice);
+                }
+            }
+        }
+        
         public Matrix View { get; protected set; }
         public Matrix Projection { get; protected set; }
 
@@ -17,13 +34,9 @@ namespace TestLandscape
         public Vector3 LookAt { get; set; }
         public Vector3 Up { get; set; }
 
-        protected override void OnDraw(RenderPass pass, GameTime time, GraphicsDevice device, Camera camera, SunLight sun, Matrix world, RenderTarget2D shadowMap, Matrix shadowProjView)
+        protected override void OnLoad()
         {
-            if (pass == RenderPass.CameraUpdate)
-            {
-                UpdateMatrix(device);
-            }
-            
+            CreateComponent<CameraDrawComponent>();
         }
 
         public void UpdateMatrix(GraphicsDevice device)

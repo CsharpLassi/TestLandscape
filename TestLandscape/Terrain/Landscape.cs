@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using engenious;
-using engenious.Content;
 using engenious.Graphics;
 using engenious.UserDefined;
 using Color = engenious.Color;
 
-namespace TestLandscape
+namespace TestLandscape.Terrain
 {
     public class Landscape : GameObject<Landscape>
     {   
@@ -38,9 +36,11 @@ namespace TestLandscape
         {
             return (HeightMap[y * Width + x].R / 255.0f - 0.5f);
         }
-        
-        public override unsafe void OnLoad()
+
+        protected override unsafe void OnLoad()
         {
+            CreateComponent<TerrainComponent>();
+            
             if (!isDirty)
                 return;
             
@@ -116,16 +116,16 @@ namespace TestLandscape
             isDirty = false;
         }
 
-        protected override void OnDraw(RenderPass pass, GameTime time, GraphicsDevice device, Camera camera, SunLight sun,
+        public void Draw(RenderPass pass, GameTime time, Camera camera, SunLight sun,
             Matrix world, RenderTarget2D shadowMap, Matrix shadowProjView)
         {
             if (pass == RenderPass.Shadow)
             {
-                DrawShadow(device,world,camera.View,camera.Projection);
+                DrawShadow(world,camera.View,camera.Projection);
             }
             else if (pass == RenderPass.Normal)
             {
-                DrawNormal(device,world,camera.View,camera.Projection,
+                DrawNormal(world,camera.View,camera.Projection,
                     shadowProjView,shadowMap,sun.AmbientColor,sun.DiffuseColor,sun.DiffuseDirection );
             }
             
@@ -133,14 +133,14 @@ namespace TestLandscape
         }
         
         
-        private void DrawNormal(GraphicsDevice device,Matrix world, Matrix view, Matrix proj
+        private void DrawNormal(Matrix world, Matrix view, Matrix proj
             , Matrix shadowViewProj
             , RenderTarget2D shadowMap
             ,Color ambientColor,Color diffuseColor,Vector3 diffuseDirection)
         {
-            device.RasterizerState = RasterizerState.CullClockwise;
-            device.VertexBuffer = vb;
-            device.IndexBuffer = ib;
+            GraphicsDevice.RasterizerState = RasterizerState.CullClockwise;
+            GraphicsDevice.VertexBuffer = vb;
+            GraphicsDevice.IndexBuffer = ib;
 
             terrainEffect.Main.Pass1.Apply();
             terrainEffect.Main.Pass1.World = world;
@@ -152,22 +152,22 @@ namespace TestLandscape
             terrainEffect.Main.Pass1.AmbientColor = ambientColor;
             terrainEffect.Main.Pass1.DiffuseColor = diffuseColor;
             terrainEffect.Main.Pass1.DiffuseDirection = diffuseDirection;
-            device.DrawIndexedPrimitives(PrimitiveType.Triangles,0,0,vb.VertexCount,0,ib.IndexCount/3);
+            GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.Triangles,0,0,vb.VertexCount,0,ib.IndexCount/3);
         }
 
         
-        private void DrawShadow(GraphicsDevice device ,Matrix world, Matrix view, Matrix proj)
+        private void DrawShadow(Matrix world, Matrix view, Matrix proj)
         {
-            device.RasterizerState = RasterizerState.CullCounterClockwise;
-            device.VertexBuffer = vb;
-            device.IndexBuffer = ib;
+            GraphicsDevice.RasterizerState = RasterizerState.CullCounterClockwise;
+            GraphicsDevice.VertexBuffer = vb;
+            GraphicsDevice.IndexBuffer = ib;
             
             terrainEffect.Shadow.Pass1.Apply();
             terrainEffect.Shadow.Pass1.Proj = proj;
             terrainEffect.Shadow.Pass1.View = view;
             terrainEffect.Shadow.Pass1.World = world;
             
-            device.DrawIndexedPrimitives(PrimitiveType.Triangles,0,0,vb.VertexCount,0,ib.IndexCount/3);
+            GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.Triangles,0,0,vb.VertexCount,0,ib.IndexCount/3);
         }
         
 

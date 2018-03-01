@@ -12,34 +12,22 @@ namespace TestLandscape
 {
     public class TestGame : Game
     { 
-        private BasicScene scene;
+        private GameSimulation simulation;
 
         //private ModelEffect modelEffect;
         
         public TestGame()
         {
-            
+            simulation = new GameSimulation(this);
+            Components.Add(simulation);
         }
         
         public override void LoadContent()
         {
             base.LoadContent();
-            
-            
-            
-            scene = new BasicScene(this);
-            scene.Load(Content,GraphicsDevice);
-        }
 
-        public override void Update(GameTime gameTime)
-        {
-         
-            scene.Update(gameTime);
-        }
-
-        public override void Draw(GameTime gameTime)
-        {
-            scene.Draw(gameTime,GraphicsDevice);
+            simulation.LoadScene<BasicScene>();
+            
         }
     }
 }

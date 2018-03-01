@@ -61,6 +61,8 @@
   <ItemGroup>
     <Compile Include="Camera.cs" />
     <Compile Include="Components\HeadComponent.cs" />
+    <Compile Include="Components\Models\ModelComponent.cs" />
+    <Compile Include="Components\Models\Tree1ModelComponent.cs" />
     <Compile Include="Components\ScalingComponent.cs" />
     <Compile Include="Components\TranslationComponent.cs" />
     <Compile Include="GameList.cs" />
@@ -68,12 +70,13 @@
     <Compile Include="GameObject.cs" />
     <Compile Include="GameObjectCollection.cs" />
     <Compile Include="GameObjectComponentCollection.cs" />
+    <Compile Include="GameSimulation.cs" />
+    <Compile Include="GameSimulationComponent.cs" />
+    <Compile Include="IDrawComponent.cs" />
     <Compile Include="IGameId.cs" />
     <Compile Include="IGameObjectComponent.cs" />
-    <Compile Include="Landscape.cs" />
-    <Compile Include="ModelObject.cs" />
+    <Compile Include="IScript.cs" />
     <Compile Include="Models\Player.cs" />
-    <Compile Include="Models\Tree1Object.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RenderPass.cs" />
@@ -83,7 +86,13 @@
     <Compile Include="Scripts\PlaceItemScript.cs" />
     <Compile Include="Scripts\PlayerMouseInputScript.cs" />
     <Compile Include="Scripts\PlayerMoveInputScript.cs" />
+    <Compile Include="Scripts\World\GravityCompononent.cs" />
+    <Compile Include="Simulation\HeadSimulation.cs" />
+    <Compile Include="Simulation\ScriptSimulation.cs" />
+    <Compile Include="Simulation\World\GravitySimulation.cs" />
     <Compile Include="SunLight.cs" />
+    <Compile Include="Terrain\Landscape.cs" />
+    <Compile Include="Terrain\TerrainComponent.cs" />
     <Compile Include="TestGame.cs" />
   </ItemGroup>
   <ItemGroup>
