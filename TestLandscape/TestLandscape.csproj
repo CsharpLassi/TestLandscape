@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="Camera.cs" />
     <Compile Include="Components\HeadComponent.cs" />
+    <Compile Include="Components\Models\Grass\Grass1ModelComponent.cs" />
     <Compile Include="Components\Models\ModelComponent.cs" />
     <Compile Include="Components\Models\Tree1ModelComponent.cs" />
     <Compile Include="Components\ScalingComponent.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="IGameId.cs" />
     <Compile Include="IGameObjectComponent.cs" />
     <Compile Include="IScript.cs" />
+    <Compile Include="Models\Grass\Grass1ModelObject.cs" />
     <Compile Include="Models\Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

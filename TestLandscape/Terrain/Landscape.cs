@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Drawing;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using engenious;
 using engenious.Graphics;
 using engenious.UserDefined;
+using TestLandscape.Models.Grass;
 using Color = engenious.Color;
 
 namespace TestLandscape.Terrain
@@ -39,6 +41,8 @@ namespace TestLandscape.Terrain
 
         protected override unsafe void OnLoad()
         {
+            Random r = new Random(1024);
+            
             CreateComponent<TerrainComponent>();
             
             if (!isDirty)
@@ -73,6 +77,7 @@ namespace TestLandscape.Terrain
                         Color color = Color.SandyBrown;
                         if (height > 0)
                             color = Color.SpringGreen;
+                        
                         var vectors = stackalloc Vector3[6];
                         vectors[0] = new Vector3(x, y - 1, GetHeight(x, y - 1));
                         vectors[1] = new Vector3(x - 1, y - 1, GetHeight(x - 1, y - 1));
@@ -106,12 +111,43 @@ namespace TestLandscape.Terrain
                 {
                     
                 }
-            });       
+            });    
+            
+            
+            
             vb = new VertexBuffer(GraphicsDevice,typeof(VertexPositionNormalColor),vertex.Length);
             vb.SetData(vertex);
 
             ib = new IndexBuffer(GraphicsDevice,DrawElementsType.UnsignedInt,indexes.Length);
             ib.SetData(indexes);
+            
+            Grass1ModelObject.Create(this, new Vector3(0, 0, 0));
+
+            int count = 0;
+            
+            Parallel.For(1, Width - 1, (xs) =>
+            {
+                try
+                {
+                    uint x = (uint) xs;
+                    uint index = (x - 1) * (Height - 2);
+                    uint indicesIndex = (x - 1) * (Height - 3)*6;
+                    for (uint y = 1; y < Height - 1; y++, index++)
+                    {
+                        var height = GetHeight(x, y);
+
+                        if (height > 0 && r.Next(2) == 0 && Interlocked.Increment(ref count) <10000)
+                        {
+                            Grass1ModelObject.Create(this, new Vector3(x, y, height));
+                        }
+                        
+                    }
+                }
+                catch (Exception ex)
+                {
+                    
+                }
+            });    
             
             isDirty = false;
         }

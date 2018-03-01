@@ -18,12 +18,17 @@ namespace TestLandscape
         
         private int enumerableSemaphore = 0;
         
+        private object changeLockObject = new object();
+        
         public void Clear()
         {
-            Ids.Clear();
-            Sets.Clear();
-            AddQueue.Clear();
-            RemoveQueue.Clear();
+            lock (changeLockObject)
+            {
+                Ids.Clear();
+                Sets.Clear();
+                AddQueue.Clear();
+                RemoveQueue.Clear();
+            }
         }   
         
         public bool Add(T component)
@@ -31,13 +36,15 @@ namespace TestLandscape
             if (!Ids.Contains(component.Id))
             {
                 Ids.Add(component.Id);
-                
-                if (enumerableSemaphore == 0)
-                    Sets.Add(component.Id,component);
-                else
-                    AddQueue.Enqueue(component);
-                
-                
+
+                lock (changeLockObject)
+                {
+                    if (enumerableSemaphore == 0)
+                        Sets.Add(component.Id, component);
+                    else
+                        AddQueue.Enqueue(component);
+
+                }
                 return true;
             }
             
@@ -50,29 +57,37 @@ namespace TestLandscape
             if (Ids.Contains(component.Id))
             {
                 Ids.Remove(component.Id);
+
+                lock (changeLockObject)
+                {
+                    if (enumerableSemaphore == 0)
+                        Sets.Remove(component.Id);
+                    else
+                        RemoveQueue.Enqueue(component);
                 
-                if (enumerableSemaphore == 0)
-                    Sets.Remove(component.Id);
-                else
-                    RemoveQueue.Enqueue(component);
+                    return true;
+                }
                 
-                return true;
+                
             }
             return false;
         }
         
         private void UpdateQueues()
         {
-            while (RemoveQueue.Count > 0)
+            lock (changeLockObject)
             {
-                var item = RemoveQueue.Dequeue();
-                Sets.Remove(item.Id);
-            }
+                while (RemoveQueue.Count > 0)
+                {
+                    var item = RemoveQueue.Dequeue();
+                    Sets.Remove(item.Id);
+                }
             
-            while (AddQueue.Count > 0)
-            {
-                var item = AddQueue.Dequeue();
-                Sets.Add(item.Id,item);
+                while (AddQueue.Count > 0)
+                {
+                    var item = AddQueue.Dequeue();
+                    Sets.Add(item.Id,item);
+                }
             }
         }
         

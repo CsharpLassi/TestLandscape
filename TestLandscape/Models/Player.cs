@@ -3,6 +3,7 @@ using engenious.Content;
 using engenious.Graphics;
 using TestLandscape.Components;
 using TestLandscape.Components.Models;
+using TestLandscape.Components.Models.Grass;
 using TestLandscape.Scripts;
 using TestLandscape.Scripts.World;
 
@@ -22,7 +23,7 @@ namespace TestLandscape.Models
             
             var placeBox = CreateObject<GameObject>();
             placeBox.CreateComponent<TranslationComponent>();
-            placeBox.CreateComponent<Tree1ModelComponent>();
+            //placeBox.CreateComponent<Grass1ModelComponent>();
 
             CreateComponent<PlaceItemScript>(i => i.PlaceBox = placeBox);
         }

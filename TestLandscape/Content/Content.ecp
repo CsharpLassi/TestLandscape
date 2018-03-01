@@ -99,5 +99,33 @@
         <CreateUserEffect>True</CreateUserEffect>
       </Settings>
     </ContentFile>
+    <ContentFolder>
+      <Name>grass</Name>
+      <Contents>
+        <ContentFile>
+          <Name>grass1.fbx</Name>
+          <Processor>ModelProcessor</Processor>
+          <Importer>Model Importer</Importer>
+          <Settings>
+            <Scale>
+              <X>1</X>
+              <Y>1</Y>
+              <Z>1</Z>
+            </Scale>
+            <Translate>
+              <X>0</X>
+              <Y>0</Y>
+              <Z>0</Z>
+            </Translate>
+            <Rotation>
+              <X>0</X>
+              <Y>0</Y>
+              <Z>0</Z>
+            </Rotation>
+            <TransformMesh>True</TransformMesh>
+          </Settings>
+        </ContentFile>
+      </Contents>
+    </ContentFolder>
   </Contents>
 </Content>
