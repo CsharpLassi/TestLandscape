@@ -26,10 +26,14 @@ namespace TestLandscape.Components.Models
             isStaticLoaded = true;
         }
         
-        public override void Draw(RenderPass pass, GameTime time, Camera camera, SunLight sun, Matrix world,
-            RenderTarget2D shadowMap, Matrix shadowProjView)
+        public override void Draw(int step, RenderPass pass, GameTime time, Camera camera, SunLight sun, RenderTarget2D shadowMap, Matrix shadowProjView)
         {
-            DrawModel(pass,logModel,world,camera,sun);
+            var matrix = GameObject.GetWorldDrawMatrix(step);
+            var logScale = 0.1f;
+            
+            DrawModel(pass,logModel,matrix * Matrix.CreateScaling(logScale,logScale,logScale),camera,sun);
+            
+            DrawModel(pass,leavesModel,matrix,camera,sun);
         }
 
 

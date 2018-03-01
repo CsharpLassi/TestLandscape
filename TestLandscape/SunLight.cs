@@ -12,22 +12,16 @@ namespace TestLandscape
 
             protected override void OnLoad()
             {
+                base.OnLoad();
                 IsOrtho = true;
             }
 
-            /*
-            protected override void OnDraw(RenderPass pass, GameTime time, GraphicsDevice device, Camera camera, SunLight sun, Matrix world,
-                RenderTarget2D shadowMap, Matrix shadowProjView)
+            protected override void OnDraw(GameTime time, Camera camera, SunLight sun, RenderTarget2D shadowMap, Matrix shadowProjView)
             {
-                if (pass == RenderPass.CameraUpdate)
-                {
-                    LookAt = camera.Position;
-                    Position = camera.Position - SunLight.DiffuseDirection;
-                    Up = Vector3.UnitY;
-                }
-                base.OnDraw(pass,time,device,camera,sun,world,shadowMap,shadowProjView);
+                LookAt = camera.Position;
+                Position = camera.Position - SunLight.DiffuseDirection;
+                Up = Vector3.UnitY;
             }
-            */
         }
         
         public Color AmbientColor { get; set; }
@@ -38,6 +32,8 @@ namespace TestLandscape
 
         protected override  void OnLoad()
         {
+            base.OnLoad();
+
             ShadowCamera = CreateObject<SunShadowCamera>();
             ShadowCamera.SunLight = this;
             

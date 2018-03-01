@@ -65,6 +65,8 @@
     <Compile Include="Components\Models\Tree1ModelComponent.cs" />
     <Compile Include="Components\ScalingComponent.cs" />
     <Compile Include="Components\TranslationComponent.cs" />
+    <Compile Include="DrawComponent.cs" />
+    <Compile Include="EditableGameList.cs" />
     <Compile Include="GameList.cs" />
     <Compile Include="GameObjectComponent.cs" />
     <Compile Include="GameObject.cs" />
@@ -88,6 +90,7 @@
     <Compile Include="Scripts\PlayerMoveInputScript.cs" />
     <Compile Include="Scripts\World\GravityCompononent.cs" />
     <Compile Include="Simulation\HeadSimulation.cs" />
+    <Compile Include="Simulation\RenderSimulation.cs" />
     <Compile Include="Simulation\ScriptSimulation.cs" />
     <Compile Include="Simulation\World\GravitySimulation.cs" />
     <Compile Include="SunLight.cs" />

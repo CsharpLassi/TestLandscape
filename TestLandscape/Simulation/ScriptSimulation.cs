@@ -19,5 +19,10 @@ namespace TestLandscape.Simulation
                 }
             }
         }
+
+        protected override void BeginUpdate()
+        {
+            
+        }
     }
 }

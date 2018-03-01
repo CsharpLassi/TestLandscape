@@ -20,7 +20,7 @@ namespace TestLandscape
     public abstract class GameObjectComponent<T> : IGameObjectComponent
         where T : GameObjectComponent<T>
     {
-        protected GameObject GameObject { get; private set; }
+        public GameObject GameObject { get; private set; }
         protected Scene Scene { get; private set; }
 
         public static readonly int ComponentId = GameObjectComponentManager.GetNextId();
@@ -46,11 +46,13 @@ namespace TestLandscape
 
         }
 
-        public IGameObjectComponent Copy(GameObject gameObject, Scene scene)
+        public IGameObjectComponent Copy(GameObject gameObject, Scene scene, ContentManager manager, GraphicsDevice device)
         {
             var newComponent = (T)Activator.CreateInstance(this.GetType());
             newComponent.GameObject = gameObject;
             newComponent.Scene = scene;
+            newComponent.GraphicsDevice = device;
+            newComponent.Manager = Manager;
             
             OnCopy(newComponent);
 

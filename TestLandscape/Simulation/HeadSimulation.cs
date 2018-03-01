@@ -34,5 +34,10 @@ namespace TestLandscape.Simulation
             
             gameObject.Scene.Camera.Up = -cameraUpVector;
         }
+
+        protected override void BeginUpdate()
+        {
+            
+        }
     }
 }

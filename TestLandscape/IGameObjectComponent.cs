@@ -8,7 +8,9 @@ namespace TestLandscape
     {    
         bool IsEnabled { get; set; }
 
-        IGameObjectComponent Copy(GameObject gameObject, Scene scene);
+        GameObject GameObject { get; }
+        
+        IGameObjectComponent Copy(GameObject gameObject, Scene scene,ContentManager manager, GraphicsDevice device);
         void Load(GameObject gameObject, Scene scene, ContentManager manager, GraphicsDevice device);
     }
 }

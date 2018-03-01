@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
@@ -16,6 +17,14 @@ namespace TestLandscape
         protected readonly Queue<T> RemoveQueue = new Queue<T>();
         
         private int enumerableSemaphore = 0;
+        
+        public void Clear()
+        {
+            Ids.Clear();
+            Sets.Clear();
+            AddQueue.Clear();
+            RemoveQueue.Clear();
+        }   
         
         public bool Add(T component)
         {
@@ -35,6 +44,7 @@ namespace TestLandscape
             return false;
         }
 
+        
         public bool Remove(T component)
         {
             if (Ids.Contains(component.Id))

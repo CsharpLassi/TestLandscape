@@ -5,8 +5,8 @@ using engenious.UserDefined;
 
 namespace TestLandscape.Components.Models
 {
-    public abstract class ModelComponent<T> : GameObjectComponent<T>, IDrawComponent
-        where T : GameObjectComponent<T>
+    public abstract class ModelComponent<T> : DrawComponent<T>, IDrawComponent
+        where T : ModelComponent<T>
     {
         private static bool isStaticLoaded;
 
@@ -77,6 +77,6 @@ namespace TestLandscape.Components.Models
 
         }
         
-        public abstract void Draw(RenderPass pass, GameTime time, Camera camera, SunLight sun, Matrix world, RenderTarget2D shadowMap, Matrix shadowProjView);
+        //public abstract void Draw(RenderPass pass, GameTime time, Camera camera, SunLight sun, Matrix world, RenderTarget2D shadowMap, Matrix shadowProjView);
     }
 }

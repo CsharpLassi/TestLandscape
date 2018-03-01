@@ -20,8 +20,6 @@ namespace TestLandscape
 
         public bool IsEnabled { get; set; } = true;
 
-
-        
         public int Id { get; } = Interlocked.Increment(ref globalId);
         
         public GameObject Parent
@@ -56,6 +54,48 @@ namespace TestLandscape
             
         }
 
+        private int currentStep = 0;
+        private Matrix currentMatrix = Matrix.Identity;
+        
+        public Matrix GetWorldMatrix(int step)
+        {
+            if (step == currentStep)
+                return currentMatrix;
+
+            currentStep = step;
+            
+            Matrix parentWorld = Parent?.GetWorldMatrix(step) ?? Matrix.Identity;
+
+            if (Components.TryGet<TranslationComponent>(out var translationComponent))
+                parentWorld =  parentWorld * translationComponent.Matrix;
+
+            currentMatrix = parentWorld;
+            
+            return parentWorld;
+        }
+
+        public Matrix GetWorldMatrix()
+        {
+            Matrix parentWorld = Parent?.GetWorldMatrix() ?? Matrix.Identity;
+
+            if (Components.TryGet<TranslationComponent>(out var translationComponent))
+                parentWorld =  parentWorld * translationComponent.Matrix;
+            
+            return parentWorld;
+        }
+        
+        public Matrix GetWorldDrawMatrix(int step)
+        {
+            Matrix worldMatrix = GetWorldMatrix(step);
+
+            if (Components.TryGet<ScalingComponent>(out var scallingComponent))
+            {
+                worldMatrix = worldMatrix * scallingComponent.Matrix;
+            }
+
+            return worldMatrix;
+        }
+        
         
         public T OfType<T>()
             where T: GameObject
@@ -81,22 +121,17 @@ namespace TestLandscape
             return newObject;
         }
 
-        public Matrix GetGlobalWorldMatrix()
-        {
-            Matrix parentWorld = Parent?.GetGlobalWorldMatrix() ?? Matrix.Identity;
-
-            if (Components.TryGet<TranslationComponent>(out var translationComponent))
-                return parentWorld * translationComponent.Matrix;
-
-            return parentWorld;
-        }
-
         public GameObject Copy()
         {
             var newObject = (GameObject)Activator.CreateInstance(this.GetType());
+
+            newObject.GraphicsDevice = GraphicsDevice;
+            newObject.Manager = Manager;
+            newObject.Scene = Scene;
+            
             foreach (var component in Components)
             {
-                newObject.Components.Add(component.Copy(newObject,Scene));
+                newObject.Components.Add(component.Copy(newObject,Scene, Manager, GraphicsDevice));
             }
 
             foreach (var child in Children)
@@ -106,6 +141,8 @@ namespace TestLandscape
             
             return newObject;
         }
+
+
     }
     
     public abstract class GameObject<GT> : GameObject

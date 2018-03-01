@@ -28,10 +28,14 @@ namespace TestLandscape
     {
         private static HashSet<GameSimulationComponent> simulations = new HashSet<GameSimulationComponent>();
         
-        protected static void Register<T>()
+        protected static T Register<T>()
             where T : GameSimulationComponent,new()
         {
-            simulations.Add(new T());
+            var simulationComponent = new T();
+            
+            simulations.Add(simulationComponent);
+
+            return simulationComponent;
         }
         
         public static void Simulate(GameTime time,GameObject gameObject)
@@ -43,5 +47,15 @@ namespace TestLandscape
         }
 
         protected abstract void Update(GameTime time, GameObject gameObject);
+
+        protected abstract void BeginUpdate();
+        
+        public static void BeginSimulation()
+        {
+            foreach (var simulation in simulations)
+            {
+                simulation.BeginUpdate();
+            }
+        }
     }
 }

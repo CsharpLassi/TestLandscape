@@ -3,9 +3,11 @@ using engenious.Graphics;
 
 namespace TestLandscape
 {
-    public interface IDrawComponent
+    public interface IDrawComponent : IGameObjectComponent , IGameId
     {
-        void Draw(RenderPass pass, GameTime time, Camera camera, SunLight sun, Matrix world,
+        void Draw(int step, RenderPass pass, GameTime time, Camera camera, SunLight sun,
             RenderTarget2D shadowMap, Matrix shadowProjView);
+
+        bool UseLevelOfDetail { get; }
     }
 }

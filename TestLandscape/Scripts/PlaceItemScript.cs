@@ -8,7 +8,7 @@ namespace TestLandscape.Scripts
     public class PlaceItemScript : Script<PlaceItemScript>
     {
         public GameObject PlaceBox;
-        public int Distance = 5;
+        public int Distance = 10;
 
         public float Rotation = 0;
         
@@ -17,22 +17,19 @@ namespace TestLandscape.Scripts
             var mouseState = Mouse.GetState();
             if (mouseState.RightButton == ButtonState.Pressed)
             {
-                foreach (var child in PlaceBox.Children)
+                var copy = PlaceBox.Copy();
+                if (copy.Components.TryGet<TranslationComponent>(out var translation))
                 {
-                    var copy = child.Copy();
-                    if (copy.Components.TryGet<TranslationComponent>(out var translation))
-                    {
-                        Matrix translationMatrix = PlaceBox.GetGlobalWorldMatrix();
-                        translation.Position = translationMatrix.Translation;
-                        translation.Rotation = new Vector3(0,0,Rotation);
-                        copy.Parent = null;
+                    Matrix translationMatrix = PlaceBox.GetWorldMatrix();
+                    translation.Position = translationMatrix.Translation;
+                    translation.Rotation = new Vector3(0,0,Rotation);
+                    copy.Parent = null;
                     
-                        Scene.Children.Add(copy);
-                    }
+                    Scene.Children.Add(copy);
                 }
      
-                PlaceBox.IsEnabled = false;
-                IsEnabled = false;
+                //PlaceBox.IsEnabled = false;
+                //IsEnabled = false;
                 return;
             }
 

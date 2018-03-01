@@ -10,5 +10,10 @@ namespace TestLandscape.Simulation.World
         {
             
         }
+
+        protected override void BeginUpdate()
+        {
+            
+        }
     }
 }
