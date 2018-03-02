@@ -37,14 +37,12 @@ namespace TestLandscape
 
         public Scene Scene { get; private set; }
         
-        protected ContentManager Manager { get; private set; }
-        protected GraphicsDevice GraphicsDevice { get; private set; }
+        protected GameSimulation Simulation { get; private set; }
         
-        public void Load(ContentManager manager,GraphicsDevice device,Scene scene)
+        public void Load(GameSimulation simulation,Scene scene)
         {
             Scene = scene;
-            Manager = manager;
-            GraphicsDevice = device;
+            Simulation = simulation;
             
             OnLoad();
         }
@@ -110,14 +108,14 @@ namespace TestLandscape
         public T CreateObject<T>(Action<T> fill = null) 
             where T : GameObject,new()
         {
-            var newObject = Children.Create<T>(Manager, GraphicsDevice, Scene, this, fill);
+            var newObject = Children.Create<T>(Simulation,Scene);
             return newObject;
         }
         
         public T CreateComponent<T>(Action<T> fill = null) 
             where T : GameObjectComponent<T>,new()
         {
-            var newObject = Components.CreateOrGet<T>(this, Scene, Manager, GraphicsDevice, fill);
+            var newObject = Components.CreateOrGet<T>(this,Scene,Simulation, fill);
             return newObject;
         }
 
@@ -125,13 +123,12 @@ namespace TestLandscape
         {
             var newObject = (GameObject)Activator.CreateInstance(this.GetType());
 
-            newObject.GraphicsDevice = GraphicsDevice;
-            newObject.Manager = Manager;
+            newObject.Simulation = Simulation;
             newObject.Scene = Scene;
             
             foreach (var component in Components)
             {
-                newObject.Components.Add(component.Copy(newObject,Scene, Manager, GraphicsDevice));
+                newObject.Components.Add(component.Copy(newObject,Scene,Simulation));
             }
 
             foreach (var child in Children)

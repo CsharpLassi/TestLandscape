@@ -9,12 +9,12 @@ namespace TestLandscape.Scenes
 {
     public class BasicScene : Scene
     {  
-        public override void OnLoad(ContentManager manager,GraphicsDevice device)
+        public override void OnLoad()
         {   
-            Children.Create<Landscape>(manager, device, this)
+            Children.Create<Landscape>(Simulation, this)
                 .CreateComponent<ScalingComponent>(s => s.Scaling = new Vector3(5,5,100));
 
-            Children.Create<Player>(manager, device, this);
+            Children.Create<Player>(Simulation, this);
         }
 
 

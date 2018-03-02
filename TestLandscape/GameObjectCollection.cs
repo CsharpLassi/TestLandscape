@@ -10,12 +10,12 @@ namespace TestLandscape
     public class GameObjectCollection : GameList<GameObject>
     {
         
-        public T Create<T>(ContentManager manager,GraphicsDevice device,Scene scene,GameObject parent,Action<T> fill)
+        public T Create<T>(GameSimulation simulation,Scene scene,GameObject parent,Action<T> fill)
             where T : GameObject,new()
         {
             var gameObject = new T();
             gameObject.Parent = parent;
-            gameObject.Load(manager, device, scene);
+            gameObject.Load(simulation, scene);
             
             this.Add(gameObject);
 
@@ -24,22 +24,22 @@ namespace TestLandscape
             return gameObject;
         }
         
-        public T Create<T>(ContentManager manager, GraphicsDevice device, Scene scene, GameObject parent)
+        public T Create<T>(GameSimulation simulation, Scene scene, GameObject parent)
             where T : GameObject, new()
         {
-            return Create<T>(manager, device, scene, parent, null);
+            return Create<T>(simulation, scene, parent, null);
         }
         
-        public T Create<T>(ContentManager manager, GraphicsDevice device, Scene scene, Action<T> fill)
+        public T Create<T>(GameSimulation simulation, Scene scene, Action<T> fill)
             where T : GameObject, new()
         {
-            return Create<T>(manager, device, scene, null, fill);
+            return Create<T>(simulation, scene, null, fill);
         }
         
-        public T Create<T>(ContentManager manager, GraphicsDevice device, Scene scene)
+        public T Create<T>(GameSimulation simulation, Scene scene)
             where T : GameObject, new()
         {
-            return Create<T>(manager, device, scene, null, null);
+            return Create<T>(simulation, scene, null, null);
         }
     }
 }

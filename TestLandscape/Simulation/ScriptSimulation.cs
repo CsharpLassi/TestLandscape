@@ -4,25 +4,42 @@ namespace TestLandscape.Simulation
 {
     public class ScriptSimulation : GameSimulationComponent
     {
-        public static void Register()
+        public static ScriptSimulation Register()
         {
-            Register<ScriptSimulation>();
+            return Register<ScriptSimulation>();
         }
+
+        protected readonly GameList<IScript> scripts = new GameList<IScript>();
         
-        protected override void Update(GameTime time, GameObject gameObject)
+        public override void BeginUpdate(GameTime time)
         {
-            foreach (var component in gameObject.Components)
+            
+        }
+
+        public override void Update(GameTime time)
+        {
+
+            foreach (var script in scripts)
             {
-                if (component is IScript script)
-                {
-                    script.Update(time);
-                }
+                script.Update(time);
+            }
+            
+        }
+
+        public override void Add(IGameObjectComponent component)
+        {
+            if (component is IScript script)
+            {
+                scripts.Add(script);
             }
         }
 
-        protected override void BeginUpdate()
+        public override void Remove(IGameObjectComponent component)
         {
-            
+            if (component is IScript script)
+            {
+                scripts.Remove(script);
+            }
         }
     }
 }

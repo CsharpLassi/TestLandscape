@@ -6,8 +6,10 @@ namespace TestLandscape.Simulation
 {
     public class HeadSimulation : GameSimulationComponent<HeadSimulation,HeadComponent>
     {
-        protected override void Update(GameObject gameObject, HeadComponent component ,GameTime time)
+        protected override void Update(HeadComponent component ,GameTime time)
         {
+            var gameObject = component.GameObject;
+            
             TranslationComponent trans;
             if (!gameObject.Components.TryGet<TranslationComponent>(out trans))
                 return;
@@ -35,7 +37,7 @@ namespace TestLandscape.Simulation
             gameObject.Scene.Camera.Up = -cameraUpVector;
         }
 
-        protected override void BeginUpdate()
+        public override void BeginUpdate(GameTime time)
         {
             
         }

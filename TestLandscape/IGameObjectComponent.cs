@@ -9,8 +9,9 @@ namespace TestLandscape
         bool IsEnabled { get; set; }
 
         GameObject GameObject { get; }
+        GameSimulation Simulation { get; }
         
-        IGameObjectComponent Copy(GameObject gameObject, Scene scene,ContentManager manager, GraphicsDevice device);
-        void Load(GameObject gameObject, Scene scene, ContentManager manager, GraphicsDevice device);
+        IGameObjectComponent Copy(GameObject gameObject, Scene scene,GameSimulation simulation);
+        void Load(GameObject gameObject, Scene scene, GameSimulation simulation);
     }
 }

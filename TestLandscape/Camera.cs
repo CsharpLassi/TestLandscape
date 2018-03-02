@@ -9,8 +9,21 @@ namespace TestLandscape
     public class Camera : GameObject<Camera>
     {
         
-        protected class CameraDrawComponent : DrawComponent<CameraDrawComponent>, IDrawComponent
+        protected class CameraDrawComponent : DrawComponent<CameraDrawComponent>
         {
+            private GraphicsDevice device;
+            
+            public CameraDrawComponent()
+            {
+                IsCamera = true;
+            }
+
+            protected override void OnLoad()
+            {
+                base.OnLoad();
+                device = Simulation.GraphicsDevice;
+            }
+
             protected override void OnCopy(CameraDrawComponent component)
             {
                 
@@ -21,7 +34,7 @@ namespace TestLandscape
                 if (pass == RenderPass.CameraUpdate && GameObject is Camera objectCamera)
                 {
                     objectCamera.OnDraw(time, camera, sun,shadowMap,shadowProjView);
-                    objectCamera.UpdateMatrix(GraphicsDevice);
+                    objectCamera.UpdateMatrix(device);
                 }
             }
         }

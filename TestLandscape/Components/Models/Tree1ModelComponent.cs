@@ -13,7 +13,7 @@ namespace TestLandscape.Components.Models
         protected override void OnLoad()
         {
             base.OnLoad();
-            LoadStatic(Manager);
+            LoadStatic(Simulation.Manager);
         }
 
         private static void LoadStatic(ContentManager manager)

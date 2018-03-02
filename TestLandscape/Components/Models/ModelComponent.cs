@@ -5,15 +5,16 @@ using engenious.UserDefined;
 
 namespace TestLandscape.Components.Models
 {
-    public abstract class ModelComponent<T> : DrawComponent<T>, IDrawComponent
+    public abstract class ModelComponent<T> : DrawComponent<T>
         where T : ModelComponent<T>
     {
         private static bool isStaticLoaded;
 
         private static ModelEffect effect;
 
-        public bool IsTransparent { get; set; }
-        public bool HaveShadow { get; set; } = true;
+        private static readonly object lockObject = new object();
+
+        private GraphicsDevice device;
         
         protected override void OnCopy(T component)
         {
@@ -23,24 +24,32 @@ namespace TestLandscape.Components.Models
         protected override void OnLoad()
         {
             GameObject.CreateComponent<TranslationComponent>();
-            LoadStatic(Manager);
+            LoadStatic(Simulation.Game.Content);
+
+            device = Simulation.GraphicsDevice;
         }
 
         private static void LoadStatic(ContentManager manager)
         {
-            if (isStaticLoaded)
-                return;
+            lock (lockObject)
+            {
+                if (isStaticLoaded)
+                    return;
   
+                isStaticLoaded = true;
+            }
+           
+            
             effect = manager.Load<ModelEffect>("ModelEffect");
 
-            isStaticLoaded = true;
+            
         }
         
         protected void DrawModel(RenderPass pass,Model model,Matrix world,Camera camera, SunLight sun)
         {
-            if (pass == RenderPass.Shadow && HaveShadow)
+            if (pass == RenderPass.Shadow && HasShadow)
             {
-                GraphicsDevice.RasterizerState = RasterizerState.CullCounterClockwise;
+                device.RasterizerState = RasterizerState.CullCounterClockwise;
                 effect.Shadow.Pass1.Apply();
                 effect.Shadow.Pass1.Proj = camera.Projection;
                 effect.Shadow.Pass1.View = camera.View;
@@ -49,7 +58,7 @@ namespace TestLandscape.Components.Models
             }
             else if (pass == RenderPass.Normal && !IsTransparent)
             {
-                GraphicsDevice.RasterizerState = RasterizerState.CullClockwise;
+                device.RasterizerState = RasterizerState.CullClockwise;
             
                 effect.Main.Pass1.Apply();
                 effect.Main.Pass1.AmbientColor = sun.AmbientColor;
@@ -64,7 +73,7 @@ namespace TestLandscape.Components.Models
             }
             else if(pass == RenderPass.Transparent && IsTransparent)
             {
-                GraphicsDevice.RasterizerState = RasterizerState.CullClockwise;
+                device.RasterizerState = RasterizerState.CullClockwise;
                 effect.Transparent.Pass1.Apply();
                 
                 effect.Transparent.Pass1.Proj = camera.Projection;

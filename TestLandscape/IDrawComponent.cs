@@ -9,5 +9,13 @@ namespace TestLandscape
             RenderTarget2D shadowMap, Matrix shadowProjView);
 
         bool UseLevelOfDetail { get; }
+
+        bool IsVisible { get; }
+        
+        bool IsTransparent { get; }
+
+        bool HasShadow { get; }
+        
+        bool IsCamera { get; }
     }
 }

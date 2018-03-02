@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using engenious;
 using engenious.Graphics;
@@ -15,32 +16,47 @@ namespace TestLandscape.Simulation
                                                     0.0f, 0.0f, 0.5f, 0.5f,
                                                     0.0f, 0.0f, 0.0f, 1.0f);
         
-        private readonly EditableGameList<IDrawComponent> drawComponents = new EditableGameList<IDrawComponent>();
+        private readonly List<IDrawComponent> drawComponents = new List<IDrawComponent>();
+        private readonly List<IDrawComponent> cameraComponents = new List<IDrawComponent>();
         
         private int currentStep;
+        
+        private readonly Stopwatch watch = new Stopwatch();
         
         public static RenderSimulation Register()
         {
             return Register<RenderSimulation>();
         }
 
-        protected override void BeginUpdate()
+        public override void BeginUpdate(GameTime gameTime)
         {
             currentStep++;
-            drawComponents.Clear();
         }
         
-        protected override void Update(GameTime gameTime, GameObject gameObject)
+        public override void Update(GameTime gameTime)
         {
-            foreach (var component in gameObject.Components)
+            
+        }
+
+        public override void Add(IGameObjectComponent component)
+        {   
+            if (component is IDrawComponent drawComponent)
             {
-                if (component is IDrawComponent drawComponent)
-                {
-                    drawComponents.Add(drawComponent);
-                }
+                if (drawComponent.IsCamera)
+                    cameraComponents.Add(drawComponent);
+
+                drawComponents.Add(drawComponent);
             }
         }
 
+        public override void Remove(IGameObjectComponent component)
+        {
+            if (component is IDrawComponent drawComponent)
+            {
+                cameraComponents.Remove(drawComponent);
+                drawComponents.Remove(drawComponent);
+            }
+        }
 
 
         public void Draw(GraphicsDevice device,Scene scene,GameTime gameTime)
@@ -52,65 +68,62 @@ namespace TestLandscape.Simulation
             }
             
 
-
+            watch.Restart();
             //Camera
-            foreach (var drawComponent in drawComponents)
+            foreach (var cameraComponent in cameraComponents)
             {
-                drawComponent.Draw(currentStep, RenderPass.CameraUpdate, gameTime,
+                cameraComponent.Draw(currentStep, RenderPass.CameraUpdate, gameTime,
                     scene.Camera, scene.SunLight, null, Matrix.Identity);
             }
 
+            Console.WriteLine("Camera:" + watch.ElapsedMilliseconds);
+            
             var cameraPosition = scene.Camera.Position;
-            
-            
-            //LevelOfDetail
-            foreach (var drawComponent in drawComponents)
-            {
-                if (!drawComponent.UseLevelOfDetail)
-                    continue;
-                
-                var matrix = drawComponent.GameObject.GetWorldDrawMatrix(currentStep);
-
-
-                var distance = Vector3.DistanceSquared(cameraPosition, matrix.Translation);
-                if (distance > 1000)
-                {
-                    drawComponents.Remove(drawComponent);
-                }
-            }
-            
-            
+                      
             //Shadow
 
+            watch.Restart();
             device.SetRenderTarget(shadowMap);
             device.Clear(Color.White);
             var shadowCamera = scene.SunLight.ShadowCamera;
             var shadowProjView = bias * shadowCamera.Projection * shadowCamera.View;
             foreach (var drawComponent in drawComponents)
             {
+                if (!drawComponent.IsVisible || !drawComponent.HasShadow)
+                    continue;
+                
                 drawComponent.Draw(currentStep, RenderPass.Shadow, gameTime,
                     shadowCamera, scene.SunLight, null, Matrix.Identity);
             }
+            Console.WriteLine("Shadow:" + watch.ElapsedMilliseconds);
 
-
+            watch.Restart();
             //Normal
             device.SetRenderTarget(null);
             device.Clear(Color.CornflowerBlue);
-
             foreach (var drawComponent in drawComponents)
             {
+                if (!drawComponent.IsVisible)
+                    continue;
+                
                 drawComponent.Draw(currentStep, RenderPass.Normal, gameTime,
                     scene.Camera, scene.SunLight, shadowMap,
                     shadowProjView);
             }
+            Console.WriteLine("Normal:" + watch.ElapsedMilliseconds);
             
+            watch.Restart();
             //Transparent
             foreach (var drawComponent in drawComponents)
             {
+                if (!drawComponent.IsVisible || !drawComponent.IsTransparent)
+                    continue;
+                
                 drawComponent.Draw(currentStep, RenderPass.Transparent, gameTime,
                     scene.Camera, scene.SunLight, shadowMap,
                     shadowProjView);
             }
+            Console.WriteLine("Trans:" + watch.ElapsedMilliseconds);
         }
     }
 }

@@ -10,18 +10,38 @@ namespace TestLandscape
     {
         public static readonly TS Instance = new TS();
 
-        public static void Register()
+        public GameList<T> Components { get; } = new GameList<T>();
+        
+        public static TS Register()
         {
-            Register<TS>();
+            return Register<TS>();
         }
 
-        protected sealed override void Update(GameTime time, GameObject gameObject)
+        public sealed override void Add(IGameObjectComponent component)
         {
-            if (gameObject.Components.TryGet<T>(out var component))
-                Update(gameObject,component,time);
+            if (component is T tComponent)
+            {
+                Components.Add(tComponent);
+            }
         }
 
-        protected abstract void Update(GameObject gameObject, T component, GameTime time);
+        public override void Remove(IGameObjectComponent component)
+        {
+            if (component is T tComponent)
+            {
+                Components.Remove(tComponent);
+            }
+        }
+
+        public sealed override void Update(GameTime time)
+        {
+            foreach (var component in Components)
+            {
+                Update(component,time);
+            }
+        }
+
+        protected abstract void Update( T component, GameTime time);
     }
 
     public abstract class GameSimulationComponent
@@ -37,25 +57,12 @@ namespace TestLandscape
 
             return simulationComponent;
         }
-        
-        public static void Simulate(GameTime time,GameObject gameObject)
-        {
-            foreach (var simulation in simulations)
-            {
-                simulation.Update(time,gameObject);
-            }
-        }
 
-        protected abstract void Update(GameTime time, GameObject gameObject);
+        public abstract void BeginUpdate(GameTime time);
+        public abstract void Update(GameTime time);
 
-        protected abstract void BeginUpdate();
-        
-        public static void BeginSimulation()
-        {
-            foreach (var simulation in simulations)
-            {
-                simulation.BeginUpdate();
-            }
-        }
+        public abstract void Add(IGameObjectComponent component);
+
+        public abstract void Remove(IGameObjectComponent component);
     }
 }

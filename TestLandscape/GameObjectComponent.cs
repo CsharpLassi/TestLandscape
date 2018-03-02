@@ -17,7 +17,7 @@ namespace TestLandscape
         }
     }
     
-    public abstract class GameObjectComponent<T> : IGameObjectComponent
+    public abstract class GameObjectComponent<T> : IGameObjectComponent , IDisposable
         where T : GameObjectComponent<T>
     {
         public GameObject GameObject { get; private set; }
@@ -28,16 +28,13 @@ namespace TestLandscape
         
         public bool IsEnabled { get; set; } = true;
 
-        protected ContentManager Manager { get; private set; }
-
-        protected GraphicsDevice GraphicsDevice { get; private set; }
+        public GameSimulation Simulation { get; private set; }
         
-        public void Load(GameObject gameObject, Scene scene,ContentManager manager, GraphicsDevice device)
+        public void Load(GameObject gameObject, Scene scene,GameSimulation simulation)
         {
             GameObject = gameObject;
             Scene = scene;
-            Manager = manager;
-            GraphicsDevice = device;
+            Simulation = simulation;
             OnLoad();
         }
 
@@ -46,13 +43,12 @@ namespace TestLandscape
 
         }
 
-        public IGameObjectComponent Copy(GameObject gameObject, Scene scene, ContentManager manager, GraphicsDevice device)
+        public IGameObjectComponent Copy(GameObject gameObject, Scene scene, GameSimulation simulation)
         {
             var newComponent = (T)Activator.CreateInstance(this.GetType());
             newComponent.GameObject = gameObject;
             newComponent.Scene = scene;
-            newComponent.GraphicsDevice = device;
-            newComponent.Manager = Manager;
+            newComponent.Simulation = simulation;
             
             OnCopy(newComponent);
 
@@ -64,6 +60,11 @@ namespace TestLandscape
         public sealed override int GetHashCode()
         {
             return Id;
+        }
+
+        public void Dispose()
+        {
+            GameObject.Components.Remove(this);
         }
     }
 }

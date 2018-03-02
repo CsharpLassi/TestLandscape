@@ -48,10 +48,10 @@ namespace TestLandscape.Terrain
             if (!isDirty)
                 return;
             
-            terrainEffect = Manager.Load<TerrainEffect>("TerrainEffect");
+            terrainEffect = Simulation.Game.Content.Load<TerrainEffect>("TerrainEffect");
             
             var bitmap = (Bitmap)Bitmap.FromFile("Content/maps/map.png");
-            var heightTexture = Texture2D.FromBitmap(GraphicsDevice,bitmap);
+            var heightTexture = Texture2D.FromBitmap(Simulation.GraphicsDevice,bitmap);
             var heightmap = new ColorByte[heightTexture.Width * heightTexture.Height];
             heightTexture.GetData(heightmap);
             HeightMap = heightmap;
@@ -61,6 +61,10 @@ namespace TestLandscape.Terrain
 
             var vertex = new VertexPositionNormalColor[(Width-2)*(Height-2)];
             var indexes = new uint[(Width-3)*(Height-3)*6];
+            
+            int count = 0;
+            
+            Grass1ModelObject.Create(this, new Vector3(0, 0, 0));
             
             //for (uint x = 1; x < Width-1; x++)
             Parallel.For(1, Width - 1, (xs) =>
@@ -77,6 +81,12 @@ namespace TestLandscape.Terrain
                         Color color = Color.SandyBrown;
                         if (height > 0)
                             color = Color.SpringGreen;
+                        
+                        if (height > 0 && r.Next(2) == 0 && Interlocked.Increment(ref count) <10000)
+                        {
+                            Grass1ModelObject.Create(this, new Vector3(x, y, height));
+                        }
+                        
                         
                         var vectors = stackalloc Vector3[6];
                         vectors[0] = new Vector3(x, y - 1, GetHeight(x, y - 1));
@@ -115,16 +125,17 @@ namespace TestLandscape.Terrain
             
             
             
-            vb = new VertexBuffer(GraphicsDevice,typeof(VertexPositionNormalColor),vertex.Length);
+            vb = new VertexBuffer(Simulation.GraphicsDevice,typeof(VertexPositionNormalColor),vertex.Length);
             vb.SetData(vertex);
 
-            ib = new IndexBuffer(GraphicsDevice,DrawElementsType.UnsignedInt,indexes.Length);
+            ib = new IndexBuffer(Simulation.GraphicsDevice,DrawElementsType.UnsignedInt,indexes.Length);
             ib.SetData(indexes);
             
-            Grass1ModelObject.Create(this, new Vector3(0, 0, 0));
-
-            int count = 0;
             
+
+            
+            
+            /*
             Parallel.For(1, Width - 1, (xs) =>
             {
                 try
@@ -148,7 +159,8 @@ namespace TestLandscape.Terrain
                     
                 }
             });    
-            
+            */
+                
             isDirty = false;
         }
 
@@ -174,9 +186,9 @@ namespace TestLandscape.Terrain
             , RenderTarget2D shadowMap
             ,Color ambientColor,Color diffuseColor,Vector3 diffuseDirection)
         {
-            GraphicsDevice.RasterizerState = RasterizerState.CullClockwise;
-            GraphicsDevice.VertexBuffer = vb;
-            GraphicsDevice.IndexBuffer = ib;
+            Simulation.GraphicsDevice.RasterizerState = RasterizerState.CullClockwise;
+            Simulation.GraphicsDevice.VertexBuffer = vb;
+            Simulation.GraphicsDevice.IndexBuffer = ib;
 
             terrainEffect.Main.Pass1.Apply();
             terrainEffect.Main.Pass1.World = world;
@@ -188,22 +200,22 @@ namespace TestLandscape.Terrain
             terrainEffect.Main.Pass1.AmbientColor = ambientColor;
             terrainEffect.Main.Pass1.DiffuseColor = diffuseColor;
             terrainEffect.Main.Pass1.DiffuseDirection = diffuseDirection;
-            GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.Triangles,0,0,vb.VertexCount,0,ib.IndexCount/3);
+            Simulation.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.Triangles,0,0,vb.VertexCount,0,ib.IndexCount/3);
         }
 
         
         private void DrawShadow(Matrix world, Matrix view, Matrix proj)
         {
-            GraphicsDevice.RasterizerState = RasterizerState.CullCounterClockwise;
-            GraphicsDevice.VertexBuffer = vb;
-            GraphicsDevice.IndexBuffer = ib;
+            Simulation.GraphicsDevice.RasterizerState = RasterizerState.CullCounterClockwise;
+            Simulation.GraphicsDevice.VertexBuffer = vb;
+            Simulation.GraphicsDevice.IndexBuffer = ib;
             
             terrainEffect.Shadow.Pass1.Apply();
             terrainEffect.Shadow.Pass1.Proj = proj;
             terrainEffect.Shadow.Pass1.View = view;
             terrainEffect.Shadow.Pass1.World = world;
             
-            GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.Triangles,0,0,vb.VertexCount,0,ib.IndexCount/3);
+            Simulation.GraphicsDevice.DrawIndexedPrimitives(PrimitiveType.Triangles,0,0,vb.VertexCount,0,ib.IndexCount/3);
         }
         
 

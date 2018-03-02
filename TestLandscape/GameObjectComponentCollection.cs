@@ -13,7 +13,24 @@ namespace TestLandscape
 {
     public class GameObjectComponentCollection : GameList<IGameObjectComponent>
     {
-        public T CreateOrGet<T>(GameObject gameObject,Scene scene,ContentManager manager,GraphicsDevice device,Action<T> fill)
+        public GameObjectComponentCollection()
+        {
+            addItem = addCallback;
+            removeItem = removeCallback;
+        }
+
+        private void removeCallback(IGameObjectComponent obj)
+        {
+            obj.Simulation.RemoveComponent(obj);
+        }
+
+        private void addCallback(IGameObjectComponent obj)
+        {
+            obj.Simulation.RegisterComponent(obj);
+        }
+
+
+        public T CreateOrGet<T>(GameObject gameObject,Scene scene,GameSimulation simulation,Action<T> fill)
             where T: GameObjectComponent<T>,new()
         {
             if (TryGet<T>(out T result))
@@ -22,7 +39,7 @@ namespace TestLandscape
             }
             
             var component = new T();
-            component.Load(gameObject,scene,manager, device);
+            component.Load(gameObject,scene,simulation);
             Add(component);
             
             fill?.Invoke(component);
@@ -30,10 +47,10 @@ namespace TestLandscape
             return component;
         }
         
-        public T CreateOrGet<T>(GameObject gameObject,Scene scene,ContentManager manager,GraphicsDevice device)
+        public T CreateOrGet<T>(GameObject gameObject,Scene scene,GameSimulation simulation)
             where T: GameObjectComponent<T>,new()
         {
-            return CreateOrGet<T>(gameObject, scene, manager, device, null);
+            return CreateOrGet<T>(gameObject, scene, simulation, null);
         }
 
         public bool TryGet<T>(out T component)

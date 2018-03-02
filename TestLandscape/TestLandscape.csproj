@@ -67,7 +67,6 @@
     <Compile Include="Components\ScalingComponent.cs" />
     <Compile Include="Components\TranslationComponent.cs" />
     <Compile Include="DrawComponent.cs" />
-    <Compile Include="EditableGameList.cs" />
     <Compile Include="GameList.cs" />
     <Compile Include="GameObjectComponent.cs" />
     <Compile Include="GameObject.cs" />

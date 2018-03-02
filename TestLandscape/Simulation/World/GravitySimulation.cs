@@ -6,12 +6,12 @@ namespace TestLandscape.Simulation.World
     public class GravitySimulation 
         : GameSimulationComponent<GravitySimulation,GravityCompononent>
     {
-        protected override void Update(GameObject gameObject, GravityCompononent component, GameTime time)
+        public override void BeginUpdate(GameTime time)
         {
             
         }
 
-        protected override void BeginUpdate()
+        protected override void Update(GravityCompononent component, GameTime time)
         {
             
         }

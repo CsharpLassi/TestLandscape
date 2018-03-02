@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using engenious;
+using engenious.Content;
 using engenious.Graphics;
 using TestLandscape.Simulation;
 using TestLandscape.Simulation.World;
@@ -11,30 +12,35 @@ namespace TestLandscape
     public class GameSimulation : DrawableGameComponent
     {
         public Scene CurrentScene { get; private set; }
+        
+
         Queue<GameObject> updateObjects = new Queue<GameObject>();
-       
-        
+
+
         private readonly RenderSimulation renderSimulation;
+           
+        private readonly List<GameSimulationComponent> gameSimulationComponents = new List<GameSimulationComponent>();
+
+        public ContentManager Manager => Game.Content;
         
-        private Stopwatch updateStopWatch = new Stopwatch();  
-        private Stopwatch drawStopwatch = new Stopwatch();
+           
         
         public GameSimulation(Game game) : base(game)
         {
-            ScriptSimulation.Register();
-            HeadSimulation.Register();
-            GravitySimulation.Register();
-            
+            gameSimulationComponents.Add(ScriptSimulation.Register());
+            gameSimulationComponents.Add(HeadSimulation.Register());
+            gameSimulationComponents.Add(GravitySimulation.Register());
+
             renderSimulation = RenderSimulation.Register();
             
-
+            gameSimulationComponents.Add(renderSimulation);
         }
 
         public void LoadScene<T>()
             where T: Scene, new()
         {
             var newScene = new T();
-            newScene.Load(this,Game.Content,GraphicsDevice);
+            newScene.Load(this);
 
             CurrentScene = newScene;
         }
@@ -43,49 +49,52 @@ namespace TestLandscape
         
         public override void Update(GameTime gameTime)
         {
-            updateStopWatch.Restart();
-            
             if (CurrentScene == null)
                 return;
 
-            GameSimulationComponent.BeginSimulation();
-            
-            foreach (var child in CurrentScene.Children)
+            foreach (var component in gameSimulationComponents)
             {
-                if (!child.IsEnabled)
-                    continue;
-                
-                updateObjects.Enqueue(child);
+                component.BeginUpdate(gameTime);
             }
 
-            while (updateObjects.Count > 0)
+            foreach (var component in gameSimulationComponents)
             {
-                var gameObject = updateObjects.Dequeue();
-
-                GameSimulationComponent.Simulate(gameTime, gameObject);
-                foreach (var child in gameObject.Children)
-                {
-                    if (!child.IsEnabled)
-                        continue;
-                    
-                    updateObjects.Enqueue(child);
-                    
-                    
-                }
+                component.Update(gameTime);
             }
-
-            Console.WriteLine("Update:" + updateStopWatch.ElapsedMilliseconds);
         }
 
 
         public override void Draw(GameTime gameTime)
         {
-            drawStopwatch.Restart();
             if (CurrentScene == null)
                 return;
             
             renderSimulation.Draw(GraphicsDevice,CurrentScene,gameTime);
-            Console.WriteLine("Draw:" + drawStopwatch.ElapsedMilliseconds);
+        }
+
+        private readonly object registerLockObject = new object();
+        
+        public void RegisterComponent(IGameObjectComponent component)
+        {
+            lock (registerLockObject)
+            {
+                foreach (var simulationComponent in gameSimulationComponents)
+                {
+                    simulationComponent.Add(component);
+                }
+            }
+        }
+        
+        
+        public void RemoveComponent(IGameObjectComponent component)
+        {
+            lock (registerLockObject)
+            {
+                foreach (var simulationComponent in gameSimulationComponents)
+                {
+                    simulationComponent.Remove(component);
+                }
+            }
         }
     }
 }

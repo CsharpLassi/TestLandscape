@@ -16,17 +16,17 @@ namespace TestLandscape
 
         public GameSimulation Simulation { get; private set; }
         
-        public void Load(GameSimulation simulation,ContentManager manager,GraphicsDevice device)
+        public void Load(GameSimulation simulation)
         {
             Simulation = simulation;
             
-            Camera = Children.Create<Camera>(manager,device, this);
-            SunLight = Children.Create<SunLight>(manager, device, this);
+            Camera = Children.Create<Camera>(simulation, this);
+            SunLight = Children.Create<SunLight>(simulation, this);
             
-            OnLoad(manager,device);
+            OnLoad();
         }
 
-        public virtual void OnLoad(ContentManager manager, GraphicsDevice device)
+        public virtual void OnLoad()
         {
 
         }

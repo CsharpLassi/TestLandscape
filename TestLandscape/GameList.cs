@@ -9,6 +9,9 @@ namespace TestLandscape
     public class GameList<T> : IEnumerable<T>
         where T : IGameId
     {
+        protected Action<T> addItem;
+        protected Action<T> removeItem;
+        
         protected readonly HashSet<int> Ids = new HashSet<int>();
         protected readonly Dictionary<int,T> Sets = new Dictionary<int, T>();
 
@@ -29,7 +32,18 @@ namespace TestLandscape
                 AddQueue.Clear();
                 RemoveQueue.Clear();
             }
-        }   
+        }
+
+        public GameList()
+        {
+            
+        }
+        
+        public GameList(Action<T> addItem, Action<T> removeItem)
+        {
+            this.addItem = addItem;
+            this.removeItem = removeItem;
+        }
         
         public bool Add(T component)
         {
@@ -40,7 +54,10 @@ namespace TestLandscape
                 lock (changeLockObject)
                 {
                     if (enumerableSemaphore == 0)
+                    {
                         Sets.Add(component.Id, component);
+                        addItem?.Invoke(component);
+                    }
                     else
                         AddQueue.Enqueue(component);
 
@@ -61,10 +78,13 @@ namespace TestLandscape
                 lock (changeLockObject)
                 {
                     if (enumerableSemaphore == 0)
+                    {
                         Sets.Remove(component.Id);
+                        removeItem?.Invoke(component);
+                    }
                     else
                         RemoveQueue.Enqueue(component);
-                
+
                     return true;
                 }
                 
@@ -81,12 +101,14 @@ namespace TestLandscape
                 {
                     var item = RemoveQueue.Dequeue();
                     Sets.Remove(item.Id);
+                    addItem?.Invoke(item);
                 }
             
                 while (AddQueue.Count > 0)
                 {
                     var item = AddQueue.Dequeue();
                     Sets.Add(item.Id,item);
+                    removeItem?.Invoke(item);
                 }
             }
         }

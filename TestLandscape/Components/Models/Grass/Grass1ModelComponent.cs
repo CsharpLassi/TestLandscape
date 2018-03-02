@@ -10,20 +10,29 @@ namespace TestLandscape.Components.Models.Grass
         private static Model grassModel;
         private static bool isLoaded;
         
+        private static object lockObject = new object();
+        
         protected override void OnLoad()
         {
             base.OnLoad();
-            OnStaticLoad(Manager);
+            OnStaticLoad(Simulation.Manager);
+
+            IsTransparent = false;
+            HasShadow = true;
         }
 
         private static void OnStaticLoad(ContentManager manager)
         {
-            if (isLoaded)
+            lock (lockObject)
+            {
+                if (isLoaded)
+                    return;
+                
                 isLoaded = true;
-             
+            }
             
             grassModel = manager.Load<Model>("grass/grass1");
-            isLoaded = true;
+            
         }
 
         public override void Draw(int step, RenderPass pass, GameTime time, Camera camera, SunLight sun, RenderTarget2D shadowMap,
