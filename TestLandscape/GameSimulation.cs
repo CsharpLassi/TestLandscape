@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using engenious;
 using engenious.Graphics;
 using TestLandscape.Simulation;
@@ -13,6 +15,9 @@ namespace TestLandscape
        
         
         private readonly RenderSimulation renderSimulation;
+        
+        private Stopwatch updateStopWatch = new Stopwatch();  
+        private Stopwatch drawStopwatch = new Stopwatch();
         
         public GameSimulation(Game game) : base(game)
         {
@@ -38,6 +43,8 @@ namespace TestLandscape
         
         public override void Update(GameTime gameTime)
         {
+            updateStopWatch.Restart();
+            
             if (CurrentScene == null)
                 return;
 
@@ -66,15 +73,19 @@ namespace TestLandscape
                     
                 }
             }
+
+            Console.WriteLine("Update:" + updateStopWatch.ElapsedMilliseconds);
         }
 
 
         public override void Draw(GameTime gameTime)
         {
+            drawStopwatch.Restart();
             if (CurrentScene == null)
                 return;
             
             renderSimulation.Draw(GraphicsDevice,CurrentScene,gameTime);
+            Console.WriteLine("Draw:" + drawStopwatch.ElapsedMilliseconds);
         }
     }
 }
