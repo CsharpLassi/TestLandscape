@@ -86,11 +86,6 @@ namespace TestLandscape
         {
             Matrix worldMatrix = GetWorldMatrix(step);
 
-            if (Components.TryGet<ScalingComponent>(out var scallingComponent))
-            {
-                worldMatrix = worldMatrix * scallingComponent.Matrix;
-            }
-
             return worldMatrix;
         }
         

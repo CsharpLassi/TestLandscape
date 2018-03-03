@@ -15,11 +15,14 @@ namespace TestLandscape
         {
             var gameObject = new T();
             gameObject.Parent = parent;
+            
+            fill?.Invoke(gameObject);
+            
             gameObject.Load(simulation, scene);
             
             this.Add(gameObject);
 
-            fill?.Invoke(gameObject);
+            
             
             return gameObject;
         }

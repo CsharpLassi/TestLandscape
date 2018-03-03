@@ -24,7 +24,9 @@ namespace TestLandscape.Terrain
         public uint Width { get; private set; }
         public ColorByte[] HeightMap { get; private set; }
         
-        
+        public Vector3 Scaling { get; set; } = Vector3.One;
+
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private uint GetIndex(uint x, uint y)
         {
@@ -84,18 +86,18 @@ namespace TestLandscape.Terrain
                         
                         if (height > 0 && r.Next(2) == 0 && Interlocked.Increment(ref count) <10000)
                         {
-                            var grass = Grass1ModelObject.Create(this, new Vector3(x, y, height));
+                            var grass = Grass1ModelObject.Create(this, new Vector3(x, y, height) * Scaling);
                             grass.ModelComponent.IsStatic = true;
                         }
                         
                         
                         var vectors = stackalloc Vector3[6];
-                        vectors[0] = new Vector3(x, y - 1, GetHeight(x, y - 1));
-                        vectors[1] = new Vector3(x - 1, y - 1, GetHeight(x - 1, y - 1));
-                        vectors[2] = new Vector3(x - 1, y, GetHeight(x - 1, y));
-                        vectors[3] = new Vector3(x, y + 1, GetHeight(x, y + 1));
-                        vectors[4] = new Vector3(x + 1, y + 1, GetHeight(x + 1, y + 1));
-                        vectors[5] = new Vector3(x + 1, y, GetHeight(x + 1, y));
+                        vectors[0] = new Vector3(x, y - 1, GetHeight(x, y - 1)) * Scaling;
+                        vectors[1] = new Vector3(x - 1, y - 1, GetHeight(x - 1, y - 1)) * Scaling;
+                        vectors[2] = new Vector3(x - 1, y, GetHeight(x - 1, y)) * Scaling;
+                        vectors[3] = new Vector3(x, y + 1, GetHeight(x, y + 1)) * Scaling;
+                        vectors[4] = new Vector3(x + 1, y + 1, GetHeight(x + 1, y + 1)) * Scaling;
+                        vectors[5] = new Vector3(x + 1, y, GetHeight(x + 1, y)) * Scaling;
 
                         Vector3 normal = Vector3.Cross(vectors[0], vectors[5]);
                         for (int i = 1; i < 6; i++)
@@ -115,7 +117,7 @@ namespace TestLandscape.Terrain
                         }
 
 
-                        vertex[index] = (new VertexPositionNormalColor(new Vector3(x, y, height), normal, color));
+                        vertex[index] = (new VertexPositionNormalColor(new Vector3(x, y, height) * Scaling, normal, color));
                     }
                 }
                 catch (Exception ex)

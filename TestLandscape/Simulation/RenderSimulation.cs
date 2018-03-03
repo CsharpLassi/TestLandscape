@@ -21,8 +21,6 @@ namespace TestLandscape.Simulation
         
         private int currentStep;
         
-        private readonly Stopwatch watch = new Stopwatch();
-        
         public static RenderSimulation Register()
         {
             return Register<RenderSimulation>();
@@ -68,21 +66,16 @@ namespace TestLandscape.Simulation
             }
             
 
-            watch.Restart();
             //Camera
             foreach (var cameraComponent in cameraComponents)
             {
                 cameraComponent.Draw(currentStep, RenderPass.CameraUpdate, gameTime,
                     scene.Camera, scene.SunLight, null, Matrix.Identity);
             }
-
-            Console.WriteLine("Camera:" + watch.ElapsedMilliseconds);
             
             var cameraPosition = scene.Camera.Position;
                       
             //Shadow
-
-            watch.Restart();
             device.SetRenderTarget(shadowMap);
             device.Clear(Color.White);
             var shadowCamera = scene.SunLight.ShadowCamera;
@@ -95,9 +88,7 @@ namespace TestLandscape.Simulation
                 drawComponent.Draw(currentStep, RenderPass.Shadow, gameTime,
                     shadowCamera, scene.SunLight, null, Matrix.Identity);
             }
-            Console.WriteLine("Shadow:" + watch.ElapsedMilliseconds);
 
-            watch.Restart();
             //Normal
             device.SetRenderTarget(null);
             device.Clear(Color.CornflowerBlue);
@@ -110,9 +101,7 @@ namespace TestLandscape.Simulation
                     scene.Camera, scene.SunLight, shadowMap,
                     shadowProjView);
             }
-            Console.WriteLine("Normal:" + watch.ElapsedMilliseconds);
             
-            watch.Restart();
             //Transparent
             foreach (var drawComponent in drawComponents)
             {
@@ -123,7 +112,6 @@ namespace TestLandscape.Simulation
                     scene.Camera, scene.SunLight, shadowMap,
                     shadowProjView);
             }
-            Console.WriteLine("Trans:" + watch.ElapsedMilliseconds);
         }
     }
 }

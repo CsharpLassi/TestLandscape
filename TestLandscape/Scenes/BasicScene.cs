@@ -10,9 +10,8 @@ namespace TestLandscape.Scenes
     public class BasicScene : Scene
     {  
         public override void OnLoad()
-        {   
-            Children.Create<Landscape>(Simulation, this)
-                .CreateComponent<ScalingComponent>(s => s.Scaling = new Vector3(5,5,100));
+        {
+            var landscape = Children.Create<Landscape>(Simulation, this, i => i.Scaling = new Vector3(5, 5, 100));
 
             Children.Create<Player>(Simulation, this);
         }

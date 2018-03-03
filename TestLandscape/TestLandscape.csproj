@@ -63,7 +63,6 @@
     <Compile Include="Components\HeadComponent.cs" />
     <Compile Include="Components\Models\Grass\Grass1ModelComponent.cs" />
     <Compile Include="Components\Models\ModelComponent.cs" />
-    <Compile Include="Components\ScalingComponent.cs" />
     <Compile Include="Components\TranslationComponent.cs" />
     <Compile Include="DrawComponent.cs" />
     <Compile Include="GameList.cs" />
