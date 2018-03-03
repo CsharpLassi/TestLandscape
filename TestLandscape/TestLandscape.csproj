@@ -63,6 +63,7 @@
     <Compile Include="Components\HeadComponent.cs" />
     <Compile Include="Components\Models\Grass\Grass1ModelComponent.cs" />
     <Compile Include="Components\Models\ModelComponent.cs" />
+    <Compile Include="Components\Models\Objects\BarrelModelComponent.cs" />
     <Compile Include="Components\TranslationComponent.cs" />
     <Compile Include="DrawComponent.cs" />
     <Compile Include="GameList.cs" />
@@ -113,6 +114,7 @@
     <Content Include="Content\modelEffect\main.vs" />
     <Content Include="Content\modelEffect\transparent.ps" />
     <Content Include="Content\modelEffect\transparent.vs" />
+    <Content Include="Content\objects\barrel.fbx" />
     <Content Include="Content\shadowEffect\shadow.ps" />
     <Content Include="Content\shadowEffect\shadow.vs" />
     <Content Include="Content\TerrainEffect.glsl" />

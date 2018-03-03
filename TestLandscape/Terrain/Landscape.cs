@@ -66,9 +66,6 @@ namespace TestLandscape.Terrain
             
             int count = 0;
             
-            Grass1ModelObject.Create(this, new Vector3(0, 0, 0));
-            
-            //for (uint x = 1; x < Width-1; x++)
             Parallel.For(1, Width - 1, (xs) =>
             {
                 try
@@ -83,12 +80,6 @@ namespace TestLandscape.Terrain
                         Color color = Color.SandyBrown;
                         if (height > 0)
                             color = Color.SpringGreen;
-                        
-                        if (height > 0 && r.Next(2) == 0 && Interlocked.Increment(ref count) <10000)
-                        {
-                            var grass = Grass1ModelObject.Create(this, new Vector3(x, y, height) * Scaling);
-                            grass.ModelComponent.IsStatic = true;
-                        }
                         
                         
                         var vectors = stackalloc Vector3[6];

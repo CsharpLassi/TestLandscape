@@ -103,7 +103,7 @@ namespace TestLandscape
         public T CreateObject<T>(Action<T> fill = null) 
             where T : GameObject,new()
         {
-            var newObject = Children.Create<T>(Simulation,Scene);
+            var newObject = Children.Create<T>(Simulation,Scene,this);
             return newObject;
         }
         

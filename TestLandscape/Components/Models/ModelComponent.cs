@@ -16,7 +16,6 @@ namespace TestLandscape.Components.Models
         private static Model model;
         private static readonly object lockObject = new object();
 
-        private GraphicsDevice device;
         private readonly string modelPath;
 
         private Matrix scaleMatrix = Matrix.CreateScaling(Vector3.One);
@@ -32,7 +31,6 @@ namespace TestLandscape.Components.Models
                 UpdateMatrix();
             }
         }
-
         protected Matrix RotateMatrix
         {
             get { return rotateMatrix; }
@@ -42,7 +40,6 @@ namespace TestLandscape.Components.Models
                 UpdateMatrix();
             }
         }
-
         protected Matrix TranslationMatrix
         {
             get { return translationMatrix; }
@@ -53,6 +50,7 @@ namespace TestLandscape.Components.Models
             }
         }
 
+        protected bool EnableColor { get; set; } = true;
 
         private Matrix drawMatrix = Matrix.Identity;
         private Matrix staticMatrix = Matrix.Identity;
@@ -60,6 +58,9 @@ namespace TestLandscape.Components.Models
         
         public ModelComponent(string modelPath)
         {
+            HasShadow = true;
+            IsTransparent = false;
+            
             this.modelPath = modelPath;
             UpdateMatrix();
         }
@@ -78,8 +79,6 @@ namespace TestLandscape.Components.Models
         {
             GameObject.CreateComponent<TranslationComponent>();
             LoadStatic(Simulation.Game.Content,modelPath);
-
-            device = Simulation.GraphicsDevice;
         }
 
         private static void LoadStatic(ContentManager manager,string modelPath)
@@ -102,6 +101,8 @@ namespace TestLandscape.Components.Models
         public sealed override void Draw(int step, RenderPass pass, GameTime time, Camera camera, SunLight sun, RenderTarget2D shadowMap,
             Matrix shadowProjView)
         {
+            GraphicsDevice device = Simulation.GraphicsDevice;
+            
             Matrix world = staticMatrix;
 
             if (!IsStatic)
@@ -138,6 +139,9 @@ namespace TestLandscape.Components.Models
                 effect.Main.Pass1.Proj = camera.Projection;
                 effect.Main.Pass1.View = camera.View;
                 effect.Main.Pass1.World = world;
+                effect.Main.Pass1.EnableColor = EnableColor ? 1 : 0;
+                effect.Main.Pass1.ShadowMap = shadowMap;
+                effect.Main.Pass1.shadowViewProj = shadowProjView;
             
                 model.Draw();
             }

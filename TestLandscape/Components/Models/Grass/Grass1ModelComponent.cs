@@ -11,9 +11,6 @@ namespace TestLandscape.Components.Models.Grass
         public Grass1ModelComponent() 
             : base("grass/grass1")
         {
-            IsTransparent = false;
-            HasShadow = true;
-
             RotateMatrix = Matrix.CreateRotationX(MathHelper.Pi);
             ScaleMatrix = Matrix.CreateScaling(0.1f,0.1f,0.1f);
         }
