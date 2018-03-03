@@ -89,7 +89,7 @@ namespace TestLandscape.Simulation
             var shadowProjView = bias * shadowCamera.Projection * shadowCamera.View;
             foreach (var drawComponent in drawComponents)
             {
-                if (!drawComponent.IsVisible || !drawComponent.HasShadow)
+                if (!drawComponent.IsEnabled || !drawComponent.HasShadow)
                     continue;
                 
                 drawComponent.Draw(currentStep, RenderPass.Shadow, gameTime,
@@ -103,7 +103,7 @@ namespace TestLandscape.Simulation
             device.Clear(Color.CornflowerBlue);
             foreach (var drawComponent in drawComponents)
             {
-                if (!drawComponent.IsVisible)
+                if (!drawComponent.IsEnabled)
                     continue;
                 
                 drawComponent.Draw(currentStep, RenderPass.Normal, gameTime,
@@ -116,7 +116,7 @@ namespace TestLandscape.Simulation
             //Transparent
             foreach (var drawComponent in drawComponents)
             {
-                if (!drawComponent.IsVisible || !drawComponent.IsTransparent)
+                if (!drawComponent.IsEnabled || !drawComponent.IsTransparent)
                     continue;
                 
                 drawComponent.Draw(currentStep, RenderPass.Transparent, gameTime,

@@ -63,7 +63,6 @@
     <Compile Include="Components\HeadComponent.cs" />
     <Compile Include="Components\Models\Grass\Grass1ModelComponent.cs" />
     <Compile Include="Components\Models\ModelComponent.cs" />
-    <Compile Include="Components\Models\Tree1ModelComponent.cs" />
     <Compile Include="Components\ScalingComponent.cs" />
     <Compile Include="Components\TranslationComponent.cs" />
     <Compile Include="DrawComponent.cs" />
@@ -103,6 +102,7 @@
     <EngeniousContentReference Include="Content\Content.ecp" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\grass\grass1.fbx" />
     <Content Include="Content\maps\map.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -119,6 +119,9 @@
     <Content Include="Content\TerrainEffect.glsl" />
     <Content Include="Content\terrainEffect\main.ps" />
     <Content Include="Content\terrainEffect\main.vs" />
+    <Content Include="Content\trees\tree1.fbx" />
+    <Content Include="Content\trees\tree1\leaves.fbx" />
+    <Content Include="Content\trees\tree1\log.fbx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -13,8 +13,6 @@ namespace TestLandscape
         
         public bool UseLevelOfDetail { get; protected set; } = true;
 
-        public bool IsVisible { get; protected set; } = true;
-
         public bool IsTransparent { get; protected set; }
 
         public bool HasShadow { get; protected set; }
