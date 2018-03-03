@@ -84,7 +84,8 @@ namespace TestLandscape.Terrain
                         
                         if (height > 0 && r.Next(2) == 0 && Interlocked.Increment(ref count) <10000)
                         {
-                            Grass1ModelObject.Create(this, new Vector3(x, y, height));
+                            var grass = Grass1ModelObject.Create(this, new Vector3(x, y, height));
+                            grass.ModelComponent.IsStatic = true;
                         }
                         
                         
@@ -130,37 +131,7 @@ namespace TestLandscape.Terrain
 
             ib = new IndexBuffer(Simulation.GraphicsDevice,DrawElementsType.UnsignedInt,indexes.Length);
             ib.SetData(indexes);
-            
-            
-
-            
-            
-            /*
-            Parallel.For(1, Width - 1, (xs) =>
-            {
-                try
-                {
-                    uint x = (uint) xs;
-                    uint index = (x - 1) * (Height - 2);
-                    uint indicesIndex = (x - 1) * (Height - 3)*6;
-                    for (uint y = 1; y < Height - 1; y++, index++)
-                    {
-                        var height = GetHeight(x, y);
-
-                        if (height > 0 && r.Next(2) == 0 && Interlocked.Increment(ref count) <10000)
-                        {
-                            Grass1ModelObject.Create(this, new Vector3(x, y, height));
-                        }
-                        
-                    }
-                }
-                catch (Exception ex)
-                {
-                    
-                }
-            });    
-            */
-                
+             
             isDirty = false;
         }
 

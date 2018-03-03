@@ -55,10 +55,9 @@ namespace TestLandscape.Components.Models
 
 
         private Matrix drawMatrix = Matrix.Identity;
-
-
+        private Matrix staticMatrix = Matrix.Identity;
+        private bool staticCreated = false;
         
-
         public ModelComponent(string modelPath)
         {
             this.modelPath = modelPath;
@@ -103,7 +102,20 @@ namespace TestLandscape.Components.Models
         public sealed override void Draw(int step, RenderPass pass, GameTime time, Camera camera, SunLight sun, RenderTarget2D shadowMap,
             Matrix shadowProjView)
         {
-            var world = GameObject.GetWorldDrawMatrix(step) * drawMatrix;
+            Matrix world = staticMatrix;
+
+            if (!IsStatic)
+            {
+                world = GameObject.GetWorldDrawMatrix(step) * drawMatrix;
+                staticCreated = false;
+            }
+
+            if (IsStatic && !staticCreated)
+            {
+                world = staticMatrix = GameObject.GetWorldDrawMatrix(step) * drawMatrix;
+                staticCreated = true;
+            }
+            
             
             if (pass == RenderPass.Shadow && HasShadow)
             {

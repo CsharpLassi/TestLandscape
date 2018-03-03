@@ -6,9 +6,11 @@ namespace TestLandscape.Models.Grass
 {
     public class Grass1ModelObject : GameObject<Grass1ModelObject>
     {
+        public IDrawComponent ModelComponent { get; private set; }
+        
         protected override void OnLoad()
         {
-            CreateComponent<Grass1ModelComponent>();
+            ModelComponent= CreateComponent<Grass1ModelComponent>();
         }
         
         public static Grass1ModelObject Create(GameObject parent,Vector3 position)
@@ -18,7 +20,7 @@ namespace TestLandscape.Models.Grass
             {
                 trans.Position = position;
             }
-
+            
             return newObject;
         }
     }

@@ -8,11 +8,13 @@ namespace TestLandscape
         void Draw(int step, RenderPass pass, GameTime time, Camera camera, SunLight sun,
             RenderTarget2D shadowMap, Matrix shadowProjView);
 
-        bool UseLevelOfDetail { get; }
-        
-        bool IsTransparent { get; }
+        bool UseLevelOfDetail { get; set; }
 
-        bool HasShadow { get; }
+        bool IsStatic { get; set; }
+        
+        bool IsTransparent { get; set; }
+
+        bool HasShadow { get; set; }
         
         bool IsCamera { get; }
     }
