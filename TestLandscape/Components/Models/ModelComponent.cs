@@ -139,7 +139,7 @@ namespace TestLandscape.Components.Models
                 effect.Main.Pass1.Proj = camera.Projection;
                 effect.Main.Pass1.View = camera.View;
                 effect.Main.Pass1.World = world;
-                effect.Main.Pass1.EnableColor = EnableColor ? 1 : 0;
+                effect.Main.Pass1.EnableColor = EnableColor;
                 effect.Main.Pass1.ShadowMap = shadowMap;
                 effect.Main.Pass1.shadowViewProj = shadowProjView;
             
