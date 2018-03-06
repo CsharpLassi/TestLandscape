@@ -85,6 +85,7 @@
     <Compile Include="Simulation\ScriptSimulation.cs" />
     <Compile Include="Simulation\World\GravitySimulation.cs" />
     <Compile Include="SunLight.cs" />
+    <Compile Include="Terrain\Generation\SimplexNoiseGenerator.cs" />
     <Compile Include="Terrain\Landscape.cs" />
     <Compile Include="Terrain\TerrainComponent.cs" />
     <Compile Include="TestGame.cs" />

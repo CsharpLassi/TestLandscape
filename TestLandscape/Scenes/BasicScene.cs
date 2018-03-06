@@ -11,7 +11,7 @@ namespace TestLandscape.Scenes
     {  
         public override void OnLoad()
         {
-            var landscape = Children.Create<Landscape>(Simulation, this, i => i.Scaling = new Vector3(5, 5, 100));
+            var landscape = Children.Create<Landscape>(Simulation, this, i => i.Scaling = new Vector3(1, 1, 1));
 
             Children.Create<Player>(Simulation, this);
         }

@@ -14,7 +14,7 @@ namespace TestLandscape.Models
     {
         protected override void OnLoad()
         {
-            CreateComponent<TranslationComponent>();
+            CreateComponent<TranslationComponent>(t => t.Position = new Vector3(0,0,10));
             CreateComponent<HeadComponent>();
 
             CreateComponent<PlayerMouseInputScript>();
@@ -22,11 +22,11 @@ namespace TestLandscape.Models
 
             CreateComponent<GravityCompononent>();
             
-            var placeBox = CreateObject<GameObject>();
-            placeBox.CreateComponent<TranslationComponent>();
-            placeBox.CreateComponent<BarrelModelComponent>();
+            //var placeBox = CreateObject<GameObject>();
+            //placeBox.CreateComponent<TranslationComponent>();
+            //placeBox.CreateComponent<BarrelModelComponent>();
 
-            CreateComponent<PlaceItemScript>(i => i.PlaceBox = placeBox);
+            //CreateComponent<PlaceItemScript>(i => i.PlaceBox = placeBox);
         }
     }
 }

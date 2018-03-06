@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Drawing;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using engenious;
 using engenious.Graphics;
+using engenious.Helper;
 using engenious.UserDefined;
 using TestLandscape.Models.Grass;
+using TestLandscape.Terrain.Generation;
 using Color = engenious.Color;
 
 namespace TestLandscape.Terrain
@@ -20,66 +23,70 @@ namespace TestLandscape.Terrain
 
         private TerrainEffect terrainEffect;
 
-        public uint Height { get; private set; }
-        public uint Width { get; private set; }
-        public ColorByte[] HeightMap { get; private set; }
+        public uint Side { get; private set; }
         
         public Vector3 Scaling { get; set; } = Vector3.One;
 
+        private float[,] map;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private uint GetIndex(uint x, uint y)
         {
             x -= 1;
             y -= 1;
-            return x * (Height -2) + y;
+            return x * (Side -2) + y;
         }
+        
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private float GetHeight(uint x, uint y)
         {
-            return (HeightMap[y * Width + x].R / 255.0f - 0.5f);
+            return (map[x, y] +1f) *0.5f;
         }
 
         protected override unsafe void OnLoad()
         {
-            Random r = new Random(1024);
+            
             
             CreateComponent<TerrainComponent>();
             
             if (!isDirty)
                 return;
             
+            Scaling = new Vector3(1,1,1);
+
+            var freq = 1 / 500f;
+            
+            var generator = new SimplexNoiseGenerator(1234,freq,freq,freq,freq);
+
+            uint fac = 1;
+            
+            Side = 512*fac;
+
+            map = generator.GetTileableNoiseMap2D(0,0, (int)Side, (int)Side, (int)Side, (int)Side);
+            
             terrainEffect = Simulation.Game.Content.Load<TerrainEffect>("TerrainEffect");
             
-            var bitmap = (Bitmap)Bitmap.FromFile("Content/maps/map.png");
-            var heightTexture = Texture2D.FromBitmap(Simulation.GraphicsDevice,bitmap);
-            var heightmap = new ColorByte[heightTexture.Width * heightTexture.Height];
-            heightTexture.GetData(heightmap);
-            HeightMap = heightmap;
             
-            Height = (uint)bitmap.Height;
-            Width = (uint)bitmap.Width;
 
-            var vertex = new VertexPositionNormalColor[(Width-2)*(Height-2)];
-            var indexes = new uint[(Width-3)*(Height-3)*6];
+
+            var vertex = new VertexPositionNormalColor[(Side-2)*(Side-2)];
+            var indexes = new uint[(Side-3)*(Side-3)*6];
             
             int count = 0;
             
-            Parallel.For(1, Width - 1, (xs) =>
+            Parallel.For(1, Side - 1, (xs) =>
             {
                 try
                 {
                     uint x = (uint) xs;
-                    uint index = (x - 1) * (Height - 2);
-                    uint indicesIndex = (x - 1) * (Height - 3)*6;
-                    for (uint y = 1; y < Height - 1; y++, index++)
+                    uint index = (x - 1) * (Side - 2);
+                    uint indicesIndex = (x - 1) * (Side - 3)*6;
+                    for (uint y = 1; y < Side - 1; y++, index++)
                     {
                         var height = GetHeight(x, y);
 
-                        Color color = Color.SandyBrown;
-                        if (height > 0)
-                            color = Color.SpringGreen;
+                        Color color = new Color(height, height, height);
                         
                         
                         var vectors = stackalloc Vector3[6];
@@ -96,7 +103,7 @@ namespace TestLandscape.Terrain
 
                         normal.Normalize();
 
-                        if (x < bitmap.Width - 2 && y < bitmap.Height - 2)
+                        if (x < Side - 2 && y < Side - 2)
                         {
                             indexes[indicesIndex++] = GetIndex(x, y);
                             indexes[indicesIndex++] = GetIndex(x + 1, y);
@@ -107,8 +114,28 @@ namespace TestLandscape.Terrain
                             indexes[indicesIndex++] = GetIndex(x, y + 1);
                         }
 
+                        
+                        var lenght = Math.Sqrt(x * x + y * y) /Side;                      
+                        
+                        var radius = Side /  MathHelper.TwoPi;
+                        var halfSide = Side / 2;
+                        
+                        var nx = (int)x - (int)halfSide;
+                        var ny = (int)y - (int) halfSide;
 
-                        vertex[index] = (new VertexPositionNormalColor(new Vector3(x, y, height) * Scaling, normal, color));
+                        var phi = Math.Atan2(nx,ny);
+                        
+                        
+                        var theta = MathHelper.Pi * (nx / (float) halfSide);
+                        var alpha = MathHelper.Pi * (ny / (float) halfSide);
+
+                        float fx = nx * (float) Math.Cos(phi);
+                        float fy = ny * (float) Math.Cos(phi);
+                        float fz =0;
+                        
+                        Vector3 coord = new Vector3(fx,fy,fz);
+                        
+                        vertex[index] = (new VertexPositionNormalColor(coord * Scaling, normal, color));
                     }
                 }
                 catch (Exception ex)

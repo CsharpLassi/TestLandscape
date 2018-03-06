@@ -60,7 +60,7 @@ namespace TestLandscape
             
             if (!IsOrtho)
             {
-                Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4,device.Viewport.AspectRatio, 0.1f, 500.0f);
+                Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4,device.Viewport.AspectRatio, 0.1f, 5000.0f);
             }
             else
             {
