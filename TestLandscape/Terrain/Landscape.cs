@@ -60,8 +60,8 @@ namespace TestLandscape.Terrain
             var generator = new SimplexNoiseGenerator(1234,freq,freq,freq,freq);
 
             uint fac = 1;
-            
-            Side = 512*fac;
+
+            Side = 17;
 
             map = generator.GetTileableNoiseMap2D(0,0, (int)Side, (int)Side, (int)Side, (int)Side);
             
@@ -115,22 +115,18 @@ namespace TestLandscape.Terrain
                         }
 
                         
-                        var lenght = Math.Sqrt(x * x + y * y) /Side;                      
-                        
-                        var radius = Side /  MathHelper.TwoPi;
                         var halfSide = Side / 2;
                         
                         var nx = (int)x - (int)halfSide;
                         var ny = (int)y - (int) halfSide;
 
-                        var phi = Math.Atan2(nx,ny);
-                        
-                        
-                        var theta = MathHelper.Pi * (nx / (float) halfSide);
-                        var alpha = MathHelper.Pi * (ny / (float) halfSide);
+                        var phi = Math.Atan(ny /(double) nx);
 
-                        float fx = nx * (float) Math.Cos(phi);
-                        float fy = ny * (float) Math.Cos(phi);
+
+                        Console.WriteLine($"{nx};{ny};{phi}");
+                        
+                        float fx = nx;
+                        float fy = ny;
                         float fz =0;
                         
                         Vector3 coord = new Vector3(fx,fy,fz);
